@@ -2,5 +2,3 @@
 
 export(get_predicts_data)
 export(get_sitelevel_summaries)
-export(get_url_string)
-export(read_rds_url)

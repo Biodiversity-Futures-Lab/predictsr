@@ -1,0 +1,21 @@
+#' Get the site level summaries from the RDS file.
+#' @export
+get_sitelevel_summaries <- function(fmt = "data.frame") {
+  resource_id <- "12f66228-4e23-4f0d-8435-18467e283512"
+  url_string <- .get_url_string(resource_id)
+
+  if (fmt == "data.frame") {
+    sls <- .read_rds_url(url_string)
+  } else if (fmt == "tibble") {
+    sls <- .read_rds_url(url_string) |> tibble::as_tibble()
+  } else {
+    stop(
+      paste(
+        "Argument fmt not recognised - please supply either 'data.frame'",
+        "or 'tibble'"
+      )
+    )
+  }
+
+  return(sls)
+}
