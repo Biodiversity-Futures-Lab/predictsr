@@ -15,9 +15,8 @@ data were collated from 480 existing spatial comparisons of local-scale
 biodiversity exposed to different intensities and types of anthropogenic
 pressures, from terrestrial sites around the world.
 
-This package accesses the latest version of the open-access database as a data
-frame or a tibble, easily allowing R users to download and perform data analysis
-with these data.
+This package accesses the latest version (v1.1, 2016) of the open-access
+database as a data frame or a tibble.
 
 The package is very much in-development so there may be changes to the API as we
 refine the codebase.

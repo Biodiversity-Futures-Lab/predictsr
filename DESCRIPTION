@@ -1,7 +1,7 @@
 Package: predictsr
-Title: Access the PREDICTS database from the Natural History Museum, London.
+Title: Access the PREDICTS database from the Natural History Museum, London
 Version: 0.0.0.9000
-Authors@R: 
+Authors@R:
     person("Connor", "Duffin", , "connor.duffin@nhm.ac.uk", role = c("aut", "cre"))
 Description: Fetches the 2016 v1.1. PREDICTS database and relevant metadata from
   the Data Portal at the Natural History Museum, London - a dataset of 3,278,056
@@ -13,9 +13,12 @@ Description: Fetches the 2016 v1.1. PREDICTS database and relevant metadata from
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.0.0
-Imports: 
-    glue
-Suggests: 
+RoxygenNote: 7.3.2
+Imports:
+    glue,
+    tibble
+Suggests:
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
+Depends:
+    R (>= 3.5)
