@@ -5,6 +5,8 @@
 #' @returns The site-level summary data in the format specified by 'fmt'.
 #' @export
 get_sitelevel_summaries <- function(fmt = "data.frame") {
+  stopifnot(is.character(fmt))
+
   resource_id <- "12f66228-4e23-4f0d-8435-18467e283512"
   url_string <- .get_url_string(resource_id)
 
