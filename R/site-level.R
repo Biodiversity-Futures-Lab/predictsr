@@ -1,4 +1,8 @@
 #' Get the site level summaries from the RDS file.
+#'
+#' @param fmt A string to give the output format, either 'data.frame' or
+#'   'tibble'. Defaults to a data frame.
+#' @returns The site-level summary data in the format specified by 'fmt'.
 #' @export
 get_sitelevel_summaries <- function(fmt = "data.frame") {
   resource_id <- "12f66228-4e23-4f0d-8435-18467e283512"

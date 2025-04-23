@@ -6,6 +6,13 @@
 \usage{
 get_sitelevel_summaries(fmt = "data.frame")
 }
+\arguments{
+\item{fmt}{A string to give the output format, either 'data.frame' or
+'tibble'. Defaults to a data frame.}
+}
+\value{
+The site-level summary data in the format specified by 'fmt'.
+}
 \description{
 Get the site level summaries from the RDS file.
 }
