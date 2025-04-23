@@ -1,0 +1,5 @@
+^renv$
+^renv\.lock$
+^20250422-predicts-database-pkg\.Rproj$
+^\.Rproj\.user$
+^LICENSE\.md$
