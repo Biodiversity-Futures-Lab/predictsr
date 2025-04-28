@@ -11,7 +11,7 @@
 #' @returns A data.frame or tibble containing the full v1.1 PREDICTS database.
 #'
 #' @export
-get_predicts_data <- function(fmt = "data.frame") {
+GetPredictsData <- function(fmt = "data.frame") {
   resource_id <- "6fa1dedf-c546-41e0-a470-17c4863686b8"
   url_string <- .get_url_string(resource_id)
 
