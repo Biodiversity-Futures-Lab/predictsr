@@ -13,12 +13,12 @@
 #' @export
 GetPredictsData <- function(fmt = "data.frame") {
   resource_id <- "6fa1dedf-c546-41e0-a470-17c4863686b8"
-  url_string <- .get_url_string(resource_id)
+  url_string <- .GetURLString(resource_id)
 
   if (fmt == "data.frame") {
-    predicts <- .read_rds_url(url_string)
+    predicts <- .ReadRDSURL(url_string)
   } else if (fmt == "tibble") {
-    predicts <- .read_rds_url(url_string) |> tibble::as_tibble()
+    predicts <- .ReadRDSURL(url_string) |> tibble::as_tibble()
   } else {
     stop(
       paste(

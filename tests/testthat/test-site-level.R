@@ -1,4 +1,4 @@
-check_sitelevel_data <- function(sls) {
+CheckSitelevelData <- function(sls) {
   expect_equal(nrow(sls), 26194)
   expect_equal(ncol(sls), 50)
 
@@ -69,32 +69,32 @@ check_sitelevel_data <- function(sls) {
 }
 
 test_that("can read in the site-level summaries", {
-  sls <- get_sitelevel_summaries()
+  sls <- GetSitelevelSummaries()
 
   # check that DF with expected attributes
   expect_true(inherits(sls, "data.frame"))
-  check_sitelevel_data(sls)
+  CheckSitelevelData(sls)
 })
 
 test_that("can read in the site-level summaries as a tibble", {
-  sls <- get_sitelevel_summaries(fmt = "tibble")
+  sls <- GetSitelevelSummaries(fmt = "tibble")
 
   # check that DF with expected attributes
   expect_true(tibble::is_tibble(sls))
-  check_sitelevel_data(sls)
+  CheckSitelevelData(sls)
 })
 
 test_that("breaks when fmt is not data.frame or tibble", {
   # check string expectations match up
   expect_error(
-    get_sitelevel_summaries("df"),
+    GetSitelevelSummaries("df"),
     regexp = paste(
       "Argument fmt not recognised - please supply either 'data.frame'",
       "or 'tibble'"
     )
   )
   expect_error(
-    get_sitelevel_summaries("Tibble"),
+    GetSitelevelSummaries("Tibble"),
     regexp = paste(
       "Argument fmt not recognised - please supply either 'data.frame'",
       "or 'tibble'"
@@ -102,7 +102,7 @@ test_that("breaks when fmt is not data.frame or tibble", {
   )
 
   # check non-character fmt arguments
-  expect_error(get_sitelevel_summaries(fmt = NA))
-  expect_error(get_sitelevel_summaries(fmt = 123))
-  expect_error(get_sitelevel_summaries(fmt = NULL))
+  expect_error(GetSitelevelSummaries(fmt = NA))
+  expect_error(GetSitelevelSummaries(fmt = 123))
+  expect_error(GetSitelevelSummaries(fmt = NULL))
 })

@@ -4,16 +4,16 @@
 #'   'tibble'. Defaults to a data frame.
 #' @returns The site-level summary data in the format specified by 'fmt'.
 #' @export
-get_sitelevel_summaries <- function(fmt = "data.frame") {
+GetSitelevelSummaries <- function(fmt = "data.frame") {
   stopifnot(is.character(fmt))
 
   resource_id <- "12f66228-4e23-4f0d-8435-18467e283512"
-  url_string <- .get_url_string(resource_id)
+  url_string <- .GetURLString(resource_id)
 
   if (fmt == "data.frame") {
-    sls <- .read_rds_url(url_string)
+    sls <- .ReadRDSURL(url_string)
   } else if (fmt == "tibble") {
-    sls <- .read_rds_url(url_string) |> tibble::as_tibble()
+    sls <- .ReadRDSURL(url_string) |> tibble::as_tibble()
   } else {
     stop(
       paste(
