@@ -1,0 +1,2 @@
+linters: linters_with_defaults(namespace_linter = namespace_linter(), object_name_linter = object_name_linter(c("CamelCase", "snake_case", "symbols")), return_linter = return_linter("explicit"))
+encoding: "UTF-8"
