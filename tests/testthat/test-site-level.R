@@ -101,6 +101,9 @@ test_that("breaks when fmt is not data.frame or tibble", {
     )
   )
 
+  # check that vectors break it
+  expect_error(GetSitelevelSummaries(fmt = c("tibble", "data.frame")))
+
   # check non-character fmt arguments
   expect_error(GetSitelevelSummaries(fmt = NA))
   expect_error(GetSitelevelSummaries(fmt = 123))

@@ -5,7 +5,10 @@
 #' @returns The site-level summary data in the format specified by 'fmt'.
 #' @export
 GetSitelevelSummaries <- function(fmt = "data.frame") {
-  stopifnot(is.character(fmt))
+  # should be a character of length 1
+  if (!(is.character(fmt) && length(fmt) == 1)) {
+    stop("Input fmt is not a length-1 character")
+  }
 
   resource_id <- "12f66228-4e23-4f0d-8435-18467e283512"
   url_string <- .GetURLString(resource_id)

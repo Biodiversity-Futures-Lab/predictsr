@@ -12,6 +12,11 @@
 #'
 #' @export
 GetPredictsData <- function(fmt = "data.frame") {
+  # should be a character of length 1
+  if (!(is.character(fmt) && length(fmt) == 1)) {
+    stop("Input fmt is not a length-1 character")
+  }
+
   resource_id <- "6fa1dedf-c546-41e0-a470-17c4863686b8"
   url_string <- .GetURLString(resource_id)
 

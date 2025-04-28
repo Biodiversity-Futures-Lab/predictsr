@@ -58,3 +58,32 @@ test_that("Can read in the PREDICTS database extract into a tibble", {
   expect_true(tibble::is_tibble(predicts))
   CheckPREDICTSData(predicts)
 })
+
+test_that("fails with incorrect format", {
+  # check string expectations match up
+  expect_error(
+    GetPredictsData("df"),
+    regexp = paste(
+      "Argument fmt not recognised - please supply either 'data.frame'",
+      "or 'tibble'"
+    )
+  )
+  expect_error(
+    GetPredictsData("Tibble"),
+    regexp = paste(
+      "Argument fmt not recognised - please supply either 'data.frame'",
+      "or 'tibble'"
+    )
+  )
+
+  # can't work for a vector
+  expect_error(
+    GetPredictsData(fmt = c("data.frame", "tibble")),
+    regexp = "Input fmt is not a length-1 character"
+  )
+
+  # non-character formats
+  expect_error(GetPredictsData(fmt = NA))
+  expect_error(GetPredictsData(fmt = 123))
+  expect_error(GetPredictsData(fmt = NULL))
+})
