@@ -1,5 +1,5 @@
-CheckPREDICTSData <- function(predicts, ...) {
-  expect_equal(nrow(predicts), 3278056)
+CheckPREDICTSData <- function(predicts, full = TRUE) {
+  # all extracts should have 67 columns
   expect_equal(ncol(predicts), 67)
 
   # do the names match up to what we expect
@@ -27,36 +27,71 @@ CheckPREDICTSData <- function(predicts, ...) {
   )
   expect_equal(names(predicts), names_predicts)
 
-  # check that some of the important factors match expectations
-  expect_equal(length(levels(predicts$SS)), 993)
-  expect_equal(length(levels(predicts$SSS)), 50032)
-  expect_equal(length(levels(predicts$SSB)), 6098)
-  expect_equal(length(levels(predicts$SSBS)), 50032)
-
   expect_equal(
     levels(predicts$Diversity_metric_type),
     c("Abundance", "Occurrence", "Species richness")
   )
 
-  expect_equal(length(levels(predicts$Taxon)), 29584)
-  expect_equal(length(levels(predicts$Family)), 1652)
-
+  # check land use factors
   expect_equal(length(levels(predicts$Predominant_land_use)), 10)
   expect_equal(length(levels(predicts$Use_intensity)), 4)
+
+  # check that the site-level factors match expectations across the data (these
+  # are to be the same for the 2016, and 2016+2022 data)
+  if (full) {
+    expect_equal(length(levels(predicts$SS)), 993)
+    expect_equal(length(levels(predicts$SSS)), 50032)
+    expect_equal(length(levels(predicts$SSB)), 6098)
+    expect_equal(length(levels(predicts$SSBS)), 50032)
+  }
 }
 
-test_that("Can read in the PREDICTS database extract", {
-  predicts <- GetPredictsData()
+test_that("Can read in all the PREDICTS data (2016 and 2022)", {
+  predicts <- GetPredictsData(extract = c(2016, 2022))
   expect_true(inherits(predicts, "data.frame"))
   CheckPREDICTSData(predicts)
+
+  # check the basic dataset dimensions
+  expect_equal(nrow(predicts), 4318808)
+  expect_equal(length(levels(predicts$Taxon)), 29585)
+  expect_equal(length(levels(predicts$Family)), 1652)
 })
 
-test_that("Can read in the PREDICTS database extract into a tibble", {
-  predicts <- GetPredictsData("tibble")
+test_that("Can read in the 2016 PREDICTS database extract", {
+  predicts <- GetPredictsData(extract = 2016)
+  expect_true(inherits(predicts, "data.frame"))
+  CheckPREDICTSData(predicts)
 
-  # check that it's a tibble
+  expect_equal(nrow(predicts), 3278056)
+  expect_equal(length(levels(predicts$Taxon)), 29584)
+  expect_equal(length(levels(predicts$Family)), 1652)
+})
+
+test_that("Can read in the 2022 PREDICTS database extract", {
+  predicts <- GetPredictsData(extract = 2022)
+  expect_true(inherits(predicts, "data.frame"))
+  CheckPREDICTSData(predicts, full = FALSE)
+
+  # Check sum summary counts over the groups
+  expect_equal(nrow(predicts), 1040752)
+  expect_equal(length(unique(predicts$Taxon)), 6915)
+  expect_equal(length(unique(predicts$SSBS)), 9544)
+  expect_equal(length(unique(predicts$Family)), 892)
+  expect_equal(length(unique(predicts$Source_ID)), 115)
+})
+
+test_that("Can read in the PREDICTS database extract into tibbles", {
+  predicts <- GetPredictsData("tibble")
   expect_true(tibble::is_tibble(predicts))
   CheckPREDICTSData(predicts)
+
+  predicts_2016 <- GetPredictsData("tibble", 2016)
+  expect_true(tibble::is_tibble(predicts))
+  CheckPREDICTSData(predicts)
+
+  predicts_2016 <- GetPredictsData("tibble", 2022)
+  expect_true(tibble::is_tibble(predicts))
+  CheckPREDICTSData(predicts, full = FALSE)
 })
 
 test_that("fails with incorrect format", {
@@ -86,4 +121,9 @@ test_that("fails with incorrect format", {
   expect_error(GetPredictsData(fmt = NA))
   expect_error(GetPredictsData(fmt = 123))
   expect_error(GetPredictsData(fmt = NULL))
+
+  # weird years
+  expect_error(GetPredictsData(extract = "2016"))
+  expect_error(GetPredictsData(extract = 123))
+  expect_error(GetPredictsData(extract = NULL))
 })
