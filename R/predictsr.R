@@ -8,12 +8,15 @@
 #'
 #' @param fmt string, the format to return the data as. Options are 'data.frame'
 #'   or 'tibble'.
+#' @param extract numeric, year/s corresponding to PREDICTS database releases to
+#'   download. Options are 2016 or 2022. Defaults to `c(2016, 2022)` - the whole
+#'   dataset.
 #' @returns A data.frame or tibble containing the full v1.1 PREDICTS database.
 #'
 #' @export
 GetPredictsData <- function(fmt = "data.frame", extract = c(2016, 2022)) {
-  if (!all(extract %in% c(2016, 2022))) {
-    stop("Incorrect 'extract' argument, should be 2016 and/or 2022")
+  if (!all(extract %in% c(2016, 2022)) || is.null(extract)) {
+    stop("'extract' should be 2016 and/or 2022")
   }
 
   inputs <- data.frame(
@@ -35,10 +38,13 @@ GetPredictsData <- function(fmt = "data.frame", extract = c(2016, 2022)) {
 #'
 #' @param fmt A string to give the output format, either 'data.frame' or
 #'   'tibble'. Defaults to a data frame.
+#' @param extract Numeric, year/s corresponding to PREDICTS database releases to
+#'   download. Options are 2016 or 2022. Defaults to `c(2016, 2022)` - the whole
+#'   dataset.
 #' @returns The site-level summary data in the format specified by 'fmt'.
 #' @export
 GetSitelevelSummaries <- function(fmt = "data.frame", extract = 2016) {
-  if (!all(extract %in% c(2016, 2022))) {
+  if (!all(extract %in% c(2016, 2022)) || is.null(extract)) {
     stop("Incorrect 'extract' argument, should be 2016 and/or 2022")
   }
 
@@ -62,6 +68,7 @@ GetSitelevelSummaries <- function(fmt = "data.frame", extract = 2016) {
 #'
 #' @param fmt A string to give the output format, either 'data.frame' or
 #'   'tibble'. Defaults to a data frame.
+#' @param url_string A string giving the URL to download the resource from.
 #' @returns The site-level summary data in the format specified by 'fmt'.
 .GetResourceAsData <- function(fmt, url_string) {
   # should be a character of length 1
@@ -87,6 +94,7 @@ GetSitelevelSummaries <- function(fmt = "data.frame", extract = 2016) {
 
 #' Format a resource URL as a string
 #'
+#' @param package_id A string for the package ID from the NHM data portal.
 #' @param resource_id A string for the resource ID from the NHM data portal.
 #'
 #' @returns A string with the url to the data to be downloaded.
