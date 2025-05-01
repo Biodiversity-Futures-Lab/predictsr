@@ -123,7 +123,8 @@ test_that("fails with incorrect format", {
   expect_error(GetPredictsData(fmt = NULL))
 
   # weird years
-  expect_error(GetPredictsData(extract = "2016"))
+  expect_error(GetPredictsData(extract = NA))
   expect_error(GetPredictsData(extract = 123))
   expect_error(GetPredictsData(extract = NULL))
+  expect_error(GetPredictsData(extract = 2015))
 })

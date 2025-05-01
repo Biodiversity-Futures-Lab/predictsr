@@ -108,4 +108,10 @@ test_that("breaks when fmt is not data.frame or tibble", {
   expect_error(GetSitelevelSummaries(fmt = NA))
   expect_error(GetSitelevelSummaries(fmt = 123))
   expect_error(GetSitelevelSummaries(fmt = NULL))
+
+  # weird years
+  expect_error(GetSitelevelSummaries(extract = NA))
+  expect_error(GetSitelevelSummaries(extract = 123))
+  expect_error(GetSitelevelSummaries(extract = NULL))
+  expect_error(GetSitelevelSummaries(extract = 2015))
 })
