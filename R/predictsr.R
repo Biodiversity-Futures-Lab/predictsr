@@ -63,6 +63,28 @@ GetSitelevelSummaries <- function(fmt = "data.frame", extract = 2016) {
   return(do.call(rbind, extract))
 }
 
+#' Get a dataframe describing the columns in the PREDICTS database extract.
+GetColumnDescriptions <- function(fmt = "data.frame", ...) {
+  # HACK(connor): currently we only use the data from the year 2022 as this
+  # appears to be a "cleaned-up" version of the data. The 2016 appears to be
+  # similar but lacks the structural improvements gotten in the 2022 release
+  resource_id <- "bae22f1a-b968-496d-8a61-b5d52659440b"
+  url_string <- .GetURLString(package_id_2022, resource_id)
+
+  # Set up the URL connection and pause so we don't overload the API
+  output <- read.csv(url_string, header = TRUE, ...)
+  Sys.sleep(0.1)
+
+  # Replace all names with underscores and get rid of all trailing underscores
+  names(output) <- gsub("\\.", "_", names(output)) |>
+    (\(n) sub("_+$", "", n))()
+  if (fmt == "tibble") {
+    return(tibble::as_tibble(output))
+  } else {
+    return(output)
+  }
+}
+
 #' From a given resource ID, retrieve the data at the location as a data.frame
 #' or tibble.
 #'
@@ -88,6 +110,9 @@ GetSitelevelSummaries <- function(fmt = "data.frame", extract = 2016) {
       )
     )
   }
+
+  # Don't overload the API
+  Sys.sleep(0.1)
 
   return(sls)
 }
