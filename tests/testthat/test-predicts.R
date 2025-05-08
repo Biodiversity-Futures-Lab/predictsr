@@ -47,6 +47,7 @@ CheckPREDICTSData <- function(predicts, full = TRUE) {
 }
 
 test_that("Can read in all the PREDICTS data (2016 and 2022)", {
+  skip_on_ci()
   predicts <- GetPredictsData(extract = c(2016, 2022))
   expect_true(inherits(predicts, "data.frame"))
   CheckPREDICTSData(predicts)
@@ -58,6 +59,7 @@ test_that("Can read in all the PREDICTS data (2016 and 2022)", {
 })
 
 test_that("Can read in the 2016 PREDICTS database extract", {
+  skip_on_ci()
   predicts <- GetPredictsData(extract = 2016)
   expect_true(inherits(predicts, "data.frame"))
   CheckPREDICTSData(predicts)
@@ -68,6 +70,7 @@ test_that("Can read in the 2016 PREDICTS database extract", {
 })
 
 test_that("Can read in the 2022 PREDICTS database extract", {
+  skip_on_ci()
   predicts <- GetPredictsData(extract = 2022)
   expect_true(inherits(predicts, "data.frame"))
   CheckPREDICTSData(predicts, full = FALSE)
@@ -81,6 +84,7 @@ test_that("Can read in the 2022 PREDICTS database extract", {
 })
 
 test_that("Can read in the PREDICTS database extract into tibbles", {
+  skip_on_ci()
   predicts <- GetPredictsData("tibble")
   expect_true(tibble::is_tibble(predicts))
   CheckPREDICTSData(predicts)

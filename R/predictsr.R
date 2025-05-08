@@ -63,6 +63,36 @@ GetSitelevelSummaries <- function(fmt = "data.frame", extract = 2016) {
   return(do.call(rbind, extract))
 }
 
+#' Get a dataframe describing the columns in the PREDICTS database extract.
+#'
+#' @param fmt string, the format to return the data as. Options are 'data.frame'
+#'   or 'tibble'.
+#' @param ... extra arguments passed to read.csv.
+#' @returns The column descriptions in the format as specified by 'fmt'.
+GetColumnDescriptions <- function(fmt = "data.frame", ...) {
+  # HACK(connor): currently we only use the data from the year 2022 as this
+  # appears to be a "cleaned-up" version of the data. The 2016 appears to be
+  # similar but lacks the structural improvements gotten in the 2022 release
+  resource_id <- "bae22f1a-b968-496d-8a61-b5d52659440b"
+  url_string <- .GetURLString(package_id_2022, resource_id)
+
+  # Set up the URL connection
+  url_con <- url(
+    url_string,
+    headers = c("User-Agent" = "predictsr user - Lead developer: connor.duffin@nhm.ac.uk")
+  )
+  output <- read.csv(url_con, ...)
+
+  # Replace all names with underscores and get rid of all trailing underscores
+  names(output) <- gsub("\\.", "_", names(output)) |>
+    (\(n) sub("_+$", "", n))()
+  if (fmt == "tibble") {
+    return(tibble::as_tibble(output))
+  } else {
+    return(output)
+  }
+}
+
 #' From a given resource ID, retrieve the data at the location as a data.frame
 #' or tibble.
 #'
@@ -113,7 +143,11 @@ GetSitelevelSummaries <- function(fmt = "data.frame", extract = 2016) {
 #'
 #' @returns An R object read in from the RDS file at `url_string`.
 .ReadRDSURL <- function(url_string, ...) {
-  url_con <- url(url_string, "rb")
+  url_con <- url(
+    url_string,
+    "rb",
+    headers = c("User-Agent" = "predictsr user - Lead developer: connor.duffin@nhm.ac.uk")
+  )
   on.exit(close(url_con))
   return(readRDS(file = url_con, ...))
 }
