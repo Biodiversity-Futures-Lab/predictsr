@@ -43,6 +43,14 @@ summaries <- GetSitelevelSummaries()
 
 which will also, by default, read in the 2016 and 2022 data, as a dataframe.
 
+To read in the descriptions of the columns of the database extract:
+
+```r
+columns <- GetColumnDescriptions()
+```
+
+which will give you a dataframe on the information on the columns that are in the database extract.
+
 ## Notes
 
 The Natural History Museum cannot warrant the quality or accuracy of the data.
