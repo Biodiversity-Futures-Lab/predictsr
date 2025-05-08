@@ -69,7 +69,7 @@ CheckSitelevelData <- function(sls) {
 }
 
 test_that("can read in the site-level summaries", {
-  skip_on_cran()
+  skip_on_ci()
   sls <- GetSitelevelSummaries()
 
   # check that DF with expected attributes
@@ -78,7 +78,7 @@ test_that("can read in the site-level summaries", {
 })
 
 test_that("can read in the site-level summaries as a tibble", {
-  skip_on_cran()
+  skip_on_ci()
   sls <- GetSitelevelSummaries(fmt = "tibble")
 
   # check that DF with expected attributes
