@@ -64,6 +64,11 @@ GetSitelevelSummaries <- function(fmt = "data.frame", extract = 2016) {
 }
 
 #' Get a dataframe describing the columns in the PREDICTS database extract.
+#'
+#' @param fmt string, the format to return the data as. Options are 'data.frame'
+#'   or 'tibble'.
+#' @param ... extra arguments passed to read.csv.
+#' @returns The column descriptions in the format as specified by 'fmt'.
 GetColumnDescriptions <- function(fmt = "data.frame", ...) {
   # HACK(connor): currently we only use the data from the year 2022 as this
   # appears to be a "cleaned-up" version of the data. The 2016 appears to be

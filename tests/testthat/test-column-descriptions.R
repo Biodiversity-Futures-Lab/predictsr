@@ -1,4 +1,5 @@
 test_that("We can get the column descriptions as desired", {
+  skip_on_cran()
   # Basic checks for the case that we have a data.frame output
   columns <- GetColumnDescriptions() |> dplyr::arrange(Column)
   expect_equal(nrow(columns), 69)
