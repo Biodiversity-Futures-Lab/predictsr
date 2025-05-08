@@ -76,8 +76,12 @@ GetColumnDescriptions <- function(fmt = "data.frame", ...) {
   resource_id <- "bae22f1a-b968-496d-8a61-b5d52659440b"
   url_string <- .GetURLString(package_id_2022, resource_id)
 
-  # Set up the URL connection and pause so we don't overload the API
-  output <- read.csv(url_string, header = TRUE, ...)
+  # Set up the URL connection
+  url_con <- url(
+    url_string,
+    headers = c("User-Agent" = "predictsr user - Lead developer: connor.duffin@nhm.ac.uk")
+  )
+  output <- read.csv(url_con, ...)
 
   # Replace all names with underscores and get rid of all trailing underscores
   names(output) <- gsub("\\.", "_", names(output)) |>
@@ -139,7 +143,11 @@ GetColumnDescriptions <- function(fmt = "data.frame", ...) {
 #'
 #' @returns An R object read in from the RDS file at `url_string`.
 .ReadRDSURL <- function(url_string, ...) {
-  url_con <- url(url_string, "rb")
+  url_con <- url(
+    url_string,
+    "rb",
+    headers = c("User-Agent" = "predictsr user - Lead developer: connor.duffin@nhm.ac.uk")
+  )
   on.exit(close(url_con))
   return(readRDS(file = url_con, ...))
 }
