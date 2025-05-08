@@ -36,6 +36,9 @@ test_that("We can get the column descriptions as desired", {
   url_string <- .GetURLString(package_id_2016, resource_id)
   columns_2016 <- read.csv(url_string, header = TRUE) |> dplyr::arrange(Column)
 
+  # So we don't overrun the API
+  Sys.sleep(1)
+
   # Is there some congruency between the old and new data?
   expect_equal(columns$Column, columns_2016$Column)
   expect_equal(columns$Applies_to, columns_2016$Applies_to)

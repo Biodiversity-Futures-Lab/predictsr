@@ -73,7 +73,7 @@ GetColumnDescriptions <- function(fmt = "data.frame", ...) {
 
   # Set up the URL connection and pause so we don't overload the API
   output <- read.csv(url_string, header = TRUE, ...)
-  Sys.sleep(0.1)
+  Sys.sleep(1)
 
   # Replace all names with underscores and get rid of all trailing underscores
   names(output) <- gsub("\\.", "_", names(output)) |>
@@ -112,7 +112,7 @@ GetColumnDescriptions <- function(fmt = "data.frame", ...) {
   }
 
   # Don't overload the API
-  Sys.sleep(0.1)
+  Sys.sleep(1)
 
   return(sls)
 }
