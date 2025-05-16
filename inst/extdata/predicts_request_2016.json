@@ -1,0 +1,17 @@
+{
+    "query": {
+        "resource_ids": [
+            "6fa1dedf-c546-41e0-a470-17c4863686b8"
+        ],
+        "query": {}
+    },
+    "notifier": {
+        "type": "none"
+    },
+    "file": {
+        "format": "raw",
+        "format_args": {
+            "allow_non_datastore": true
+        }
+    }
+}

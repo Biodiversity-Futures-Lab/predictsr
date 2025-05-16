@@ -3,13 +3,11 @@ Title: Access the PREDICTS database from the Natural History Museum, London
 Version: 0.0.0.9000
 Authors@R:
     person("Connor", "Duffin", , "connor.duffin@nhm.ac.uk", role = c("aut", "cre"))
-Description: Fetches the 2016 v1.1. PREDICTS database and relevant metadata from
-  the Data Portal at the Natural History Museum, London - a dataset of 3,278,056
-  measurements, from 26,194 sampling locations in 94 countries and
-  representing 47,089 species. Data were collated from 480 existing spatial
-  comparisons of local-scale biodiversity exposed to different intensities and
-  types of anthropogenic pressures, from sites around the world. These data are
-  licensed with a CC BY-NC 4.0 license.
+Description: Fetches the PREDICTS database and relevant metadata from
+  the Data Portal at the Natural History Museum. Data were collated from over
+  400 existing spatial comparisons of local-scale biodiversity exposed to
+  different intensities and types of anthropogenic pressures, from sites around
+  the world. These data are licensed with a CC BY-NC 4.0 license.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -17,6 +15,8 @@ RoxygenNote: 7.3.2
 Imports:
     dplyr,
     glue,
+    httr2,
+    jsonlite,
     tibble
 Suggests:
     testthat (>= 3.0.0)
