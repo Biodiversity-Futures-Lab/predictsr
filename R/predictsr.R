@@ -152,22 +152,18 @@ GetColumnDescriptions <- function(fmt = "data.frame", ...) {
   return(readRDS(file = url_con, ...))
 }
 
-#' Request RDS data from the NHM data portal, returning as a dataframe-like.
-#' Download and assemble data from a JSON-based RDS API
+#' Request data from the NHM data portal
 #'
-#' Sends a JSON-formatted request to the NHM Data Portal, monitors the status of
-#' the request, downloads the resulting ZIP archive containing RDS files, and
-#' combines them into a single data frame.
-#'
-#' @param request_body_json A named list or JSON-compatible object to be sent as
-#'   the request body.
-#' @param fmt Output format. Currently only `"data.frame"` is supported.
-#'   Reserved for future extension.
-#' @return A dataframe or tibble assembled from one or more RDS files returned
-#'   by the API.
-#'
+#' @param request_body_json A named list giving the body of the request.
+#' @param timeout Integer giving the time (in seconds) to wait for the request.
+#'   Requests in this package usually take < 5s to be processed, so don't set
+#'   this to something really high. Default is 600s (10 minutes).
+#' @returns A named `status_json` list giving the status of the request.
+#'   Contains `status_json$status` which gives if the request was successful or
+#'   not. If it was, data can be downloaded from the `status_json$urls$direct`
+#'   entry.
 #' @import httr2
-.RequestRDSDataFrame <- function(request_body_json, fmt = "data.frame") {
+.RequestDataPortal <- function(request_body_json, timeout = 600) {
   # should be a character of length 1
   if (!(is.character(fmt) && length(fmt) == 1)) {
     stop("Input fmt is not a length-1 character")
@@ -183,6 +179,7 @@ GetColumnDescriptions <- function(fmt = "data.frame", ...) {
     )
   }
 
+  print("setting up request")
   # set the download request: retry for common error codes, or if curl fails
   dl_request <- request(download_url) |>
     req_body_json(request_body_json) |>
@@ -192,6 +189,7 @@ GetColumnDescriptions <- function(fmt = "data.frame", ...) {
       retry_on_failure = TRUE
     )
 
+  print("fetch DL request")
   # fetch the download request
   dl_response <- req_perform(dl_request) |>
     resp_body_json()
@@ -200,13 +198,16 @@ GetColumnDescriptions <- function(fmt = "data.frame", ...) {
   status_json_request <- request(dl_response$result$status_json) |>
     req_throttle(120) # 120 requests every 60s
 
+  print("make initial status request")
   # make initial request to get status
   status_json <- status_json_request |>
     req_perform() |>
     resp_body_json()
 
-  # try running for 10 minutes at most
-  for (i in 1:1200) {
+  # we make 2 requests per second, so we will finish up after `timeout` seconds
+  ticks <- 2 * timeout
+  for (i in 1:ticks) {
+    print("DL request in progress")
     # break out once it has worked
     if (status_json$status == "complete") {
       break
@@ -216,6 +217,31 @@ GetColumnDescriptions <- function(fmt = "data.frame", ...) {
     status_json <- status_json_request |>
       req_perform() |>
       resp_body_json()
+  }
+
+  if (status_json$status != "complete") {
+    warning("Request to download did not complete successfully!")
+  }
+
+  # return the status list
+  return(status_json)
+}
+
+#' Request RDS data from the NHM data portal, returning as a dataframe-like.
+#' Download and assemble data from a JSON-based RDS API
+#'
+#' @param status_json A named list containing the request that was made.
+#' @param fmt Output format. Either a "data.frame" or "tibble".
+#' @return A dataframe or tibble assembled from one or more RDS files returned
+#'   by the API.
+#'
+#' @import httr2
+.RequestRDSDataFrame <- function(status_json, fmt = "data.frame") {
+  if (status_json$status != "complete") {
+    stop(
+      "Request did not complete successfully (no data to download!) - ",
+      "it may have timed out"
+    )
   }
 
   # get the location of where the data is saved to
