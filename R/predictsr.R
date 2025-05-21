@@ -179,6 +179,7 @@ GetColumnDescriptions <- function(fmt = "data.frame", ...) {
   # set the download request: retry for common error codes, or if curl fails
   dl_request <- request(download_url) |>
     req_body_json(request_body_json) |>
+    req_user_agent("predictsr resource download request <connor.duffin@nhm.ac.uk>") |>
     req_retry(
       is_transient = \(resp) resp_status(resp) %in% c(409, 429, 500, 503),
       max_tries = 10,
@@ -192,7 +193,8 @@ GetColumnDescriptions <- function(fmt = "data.frame", ...) {
 
   # check on the status of the download
   status_json_request <- request(dl_response$result$status_json) |>
-    req_throttle(120) # 120 requests every 60s
+    req_throttle(120) |>  # 120 requests every 60s
+    req_user_agent("predictsr status request <connor.duffin@nhm.ac.uk>")
 
   print("make initial status request")
   # make initial request to get status
@@ -225,7 +227,8 @@ GetColumnDescriptions <- function(fmt = "data.frame", ...) {
 
 #' Request RDS data from the NHM data portal, returning as a dataframe-like.
 #'
-#' @param status_json A named list containing the request that was made.
+#' @param status_json A named list containing the request that was made. This
+#'   should be marked as "complete" via its 'status' field.
 #' @param fmt Output format. Either a "data.frame" or "tibble".
 #' @return A dataframe or tibble assembled from one or more RDS files returned
 #'   by the API.

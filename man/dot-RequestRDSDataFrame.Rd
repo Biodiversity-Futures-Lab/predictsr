@@ -7,7 +7,8 @@
 .RequestRDSDataFrame(status_json, fmt = "data.frame")
 }
 \arguments{
-\item{status_json}{A named list containing the request that was made.}
+\item{status_json}{A named list containing the request that was made. This
+should be marked as "complete" via its 'status' field.}
 
 \item{fmt}{Output format. Either a "data.frame" or "tibble".}
 }
