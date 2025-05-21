@@ -44,3 +44,32 @@ test_that("We can get the column descriptions as desired", {
   )
   expect_equal(columns$Column, names)
 })
+
+test_that("GetColumnDescriptions fails with incorrect format", {
+  # check string expectations match up
+  expect_error(
+    GetColumnDescriptions("df"),
+    regexp = paste(
+      "Argument fmt not recognised - please supply either 'data.frame'",
+      "or 'tibble'"
+    )
+  )
+  expect_error(
+    GetColumnDescriptions("Tibble"),
+    regexp = paste(
+      "Argument fmt not recognised - please supply either 'data.frame'",
+      "or 'tibble'"
+    )
+  )
+
+  # can't work for a vector
+  expect_error(
+    GetColumnDescriptions(fmt = c("data.frame", "tibble")),
+    regexp = "Input fmt is not a length-1 character"
+  )
+
+  # non-character formats
+  expect_error(GetColumnDescriptions(fmt = NA))
+  expect_error(GetColumnDescriptions(fmt = 123))
+  expect_error(GetColumnDescriptions(fmt = NULL))
+})
