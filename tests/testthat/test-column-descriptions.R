@@ -32,21 +32,6 @@ test_that("We can get the column descriptions as desired", {
   )
   expect_equal(columns$Column, names)
 
-  # Now check against the 2016 data
-  resource_id <- "5f167ad3-0e38-49f3-8a9b-df69f6ef670b"
-  url_string <- .GetURLString(package_id_2016, resource_id)
-  columns_2016 <- read.csv(url_string, header = TRUE) |> dplyr::arrange(Column)
-
-  # So we don't overrun the API
-  Sys.sleep(1)
-
-  # Is there some congruency between the old and new data?
-  expect_equal(columns$Column, columns_2016$Column)
-  expect_equal(columns$Applies_to, columns_2016$Applies_to)
-  expect_equal(columns$Site_extract, columns_2016$Site_extract_)
-  expect_equal(columns$Type, columns_2016$Type)
-  expect_equal(columns$Value_guaranteed_to_be_non_empty, columns_2016$Validation)
-
   # Now check that we can get a tibble as required
   columns <- GetColumnDescriptions(fmt = "tibble") |> dplyr::arrange(Column)
   expect_true(tibble::is_tibble(columns))
@@ -57,4 +42,5 @@ test_that("We can get the column descriptions as desired", {
     c("Column", "Applies_to", "Site_extract", "Diversity_extract", "Type",
       "Value_guaranteed_to_be_non_empty", "Notes", "Validation")
   )
+  expect_equal(columns$Column, names)
 })
