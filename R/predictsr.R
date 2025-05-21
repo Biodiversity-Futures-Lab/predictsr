@@ -15,23 +15,40 @@
 #'
 #' @export
 GetPredictsData <- function(fmt = "data.frame", extract = c(2016, 2022)) {
+  # should be a character of length 1
+  if (!(is.character(fmt) && length(fmt) == 1)) {
+    stop("Input fmt is not a length-1 character")
+  }
+
+  # should be a dataframe or a tibble, otherwise skip
+  if (fmt != "data.frame" && fmt != "tibble") {
+    stop(
+      paste(
+        "Argument fmt not recognised - please supply either 'data.frame'",
+        "or 'tibble'"
+      )
+    )
+  }
+
+  # check that the extract is OK
   if (!all(extract %in% c(2016, 2022)) || is.null(extract)) {
     stop("'extract' should be 2016 and/or 2022")
   }
 
-  inputs <- data.frame(
-    year = c(2016, 2022), # char for easy comparison
-    packages = c(package_id_2016, package_id_2022),
-    resources = c(
-      "6fa1dedf-c546-41e0-a470-17c4863686b8",
-      "5b91276b-9051-4f48-9a5b-b3106730e4ae"
+  # make sure order is 2016, 2022, then combine and read in request
+  extract <- sort(extract)
+  year_string <- paste(extract, collapse = "_")
+  predicts_req <- jsonlite::fromJSON(
+    system.file(
+      file.path("extdata", paste0("predicts_request_", year_string, ".json")),
+      package = "predictsr"
     )
-  ) |>
-    subset(year %in% extract) |>
-    dplyr::mutate(url_strings = .GetURLString(packages, resources))
+  )
 
-  extract <- lapply(inputs$url_strings, .GetResourceAsData, fmt = fmt)
-  return(do.call(rbind, extract))
+  # make the request for the final dataframe
+  status_json <- .RequestDataPortal(predicts_req)
+  predicts <- .RequestRDSDataFrame(status_json, fmt = fmt)
+  return(predicts)
 }
 
 #' Get the site level summaries from the RDS file.
@@ -44,23 +61,39 @@ GetPredictsData <- function(fmt = "data.frame", extract = c(2016, 2022)) {
 #' @returns The site-level summary data in the format specified by 'fmt'.
 #' @export
 GetSitelevelSummaries <- function(fmt = "data.frame", extract = 2016) {
+  # should be a character of length 1
+  if (!(is.character(fmt) && length(fmt) == 1)) {
+    stop("Input fmt is not a length-1 character")
+  }
+
+  # should be a dataframe or a tibble, otherwise skip
+  if (fmt != "data.frame" && fmt != "tibble") {
+    stop(
+      paste(
+        "Argument fmt not recognised - please supply either 'data.frame'",
+        "or 'tibble'"
+      )
+    )
+  }
+
   if (!all(extract %in% c(2016, 2022)) || is.null(extract)) {
     stop("Incorrect 'extract' argument, should be 2016 and/or 2022")
   }
 
-  inputs <- data.frame(
-    year = c(2016, 2022), # char for easy comparison
-    packages = c(package_id_2016, package_id_2022),
-    resources = c(
-      "12f66228-4e23-4f0d-8435-18467e283512",
-      "83e40a70-bf91-4d85-b8af-adff624baab1"
+  # make sure order is 2016, 2022, then combine and read in request
+  extract <- sort(extract)
+  year_string <- paste(extract, collapse = "_")
+  site_req <- jsonlite::fromJSON(
+    system.file(
+      file.path("extdata", paste0("sitelevel_request_", year_string, ".json")),
+      package = "predictsr"
     )
-  ) |>
-    subset(year %in% extract) |>
-    dplyr::mutate(url_strings = .GetURLString(packages, resources))
+  )
 
-  extract <- lapply(inputs$url_strings, .GetResourceAsData, fmt = fmt)
-  return(do.call(rbind, extract))
+  # make the request for the final dataframe
+  status_json <- .RequestDataPortal(site_req)
+  predicts <- .RequestRDSDataFrame(status_json, fmt = fmt)
+  return(predicts)
 }
 
 #' Get a dataframe describing the columns in the PREDICTS database extract.
@@ -73,15 +106,48 @@ GetColumnDescriptions <- function(fmt = "data.frame", ...) {
   # HACK(connor): currently we only use the data from the year 2022 as this
   # appears to be a "cleaned-up" version of the data. The 2016 appears to be
   # similar but lacks the structural improvements gotten in the 2022 release
-  resource_id <- "bae22f1a-b968-496d-8a61-b5d52659440b"
-  url_string <- .GetURLString(package_id_2022, resource_id)
+  # should be a character of length 1
+  if (!(is.character(fmt) && length(fmt) == 1)) {
+    stop("Input fmt is not a length-1 character")
+  }
 
-  # Set up the URL connection
-  url_con <- url(
-    url_string,
-    headers = c("User-Agent" = "predictsr user - Lead developer: connor.duffin@nhm.ac.uk")
+  # should be a dataframe or a tibble, otherwise skip
+  if (fmt != "data.frame" && fmt != "tibble") {
+    stop(
+      paste(
+        "Argument fmt not recognised - please supply either 'data.frame'",
+        "or 'tibble'"
+      )
+    )
+  }
+
+  # column request is year-agnostic
+  column_req <- jsonlite::fromJSON(
+    system.file(
+      file.path("extdata", "column_request.json"),
+      package = "predictsr"
+    )
   )
-  output <- read.csv(url_con, ...)
+  status_json <- .RequestDataPortal(column_req)
+
+  # get the location of where the data is saved to
+  data_zip_url <- status_json$urls$direct
+
+  # from stackoverflow
+  temp_zip <- tempfile()
+  download.file(data_zip_url, temp_zip)
+
+  # write to a tempfile then read into an RDS
+  outputs <- unzip(temp_zip, exdir = tempdir())
+  output_zip <- outputs[basename(outputs) != "manifest.json"]
+
+  # should just be the remaining ZIP of the column descriptions
+  stopifnot(length(output_zip) == 1)
+  output <- read.csv(output_zip)
+
+  # delete temporary files from the system
+  unlink(temp_zip)
+  unlink(outputs)
 
   # Replace all names with underscores and get rid of all trailing underscores
   names(output) <- gsub("\\.", "_", names(output)) |>
@@ -93,61 +159,115 @@ GetColumnDescriptions <- function(fmt = "data.frame", ...) {
   }
 }
 
-#' From a given resource ID, retrieve the data at the location as a data.frame
-#' or tibble.
+#' Request data from the NHM data portal
 #'
-#' @param fmt A string to give the output format, either 'data.frame' or
-#'   'tibble'. Defaults to a data frame.
-#' @param url_string A string giving the URL to download the resource from.
-#' @returns The site-level summary data in the format specified by 'fmt'.
-.GetResourceAsData <- function(fmt, url_string) {
-  # should be a character of length 1
-  if (!(is.character(fmt) && length(fmt) == 1)) {
-    stop("Input fmt is not a length-1 character")
+#' @param request_body_json A named list giving the body of the request.
+#' @param timeout Integer giving the time (in seconds) to wait for the request.
+#'   Requests in this package usually take < 5s to be processed, so don't set
+#'   this to something really high. Default is 600s (10 minutes).
+#' @returns A named `status_json` list giving the status of the request.
+#'   Contains `status_json$status` which gives if the request was successful or
+#'   not. If it was, data can be downloaded from the `status_json$urls$direct`
+#'   entry.
+#' @import httr2
+.RequestDataPortal <- function(request_body_json, timeout = 600) {
+  if (!is.list(request_body_json)) {
+    stop("request_body_json should be a list (use e.g. jsonlite::fromJSON)")
   }
 
-  if (fmt == "data.frame") {
-    sls <- .ReadRDSURL(url_string)
-  } else if (fmt == "tibble") {
-    sls <- .ReadRDSURL(url_string) |> tibble::as_tibble()
-  } else {
+  print("setting up request")
+  # set the download request: retry for common error codes, or if curl fails
+  dl_request <- request(download_url) |>
+    req_body_json(request_body_json) |>
+    req_retry(
+      is_transient = \(resp) resp_status(resp) %in% c(409, 429, 500, 503),
+      max_tries = 10,
+      retry_on_failure = TRUE
+    )
+
+  print("fetch DL request")
+  # fetch the download request
+  dl_response <- req_perform(dl_request) |>
+    resp_body_json()
+
+  # check on the status of the download
+  status_json_request <- request(dl_response$result$status_json) |>
+    req_throttle(120) # 120 requests every 60s
+
+  print("make initial status request")
+  # make initial request to get status
+  status_json <- status_json_request |>
+    req_perform() |>
+    resp_body_json()
+
+  # we make 2 requests per second, so we will finish up after `timeout` seconds
+  ticks <- 2 * timeout
+  for (i in 1:ticks) {
+    print("DL request in progress")
+    # break out once it has worked
+    if (status_json$status == "complete") {
+      break
+    }
+
+    # otherwise make the request (again)
+    status_json <- status_json_request |>
+      req_perform() |>
+      resp_body_json()
+  }
+
+  if (status_json$status != "complete") {
+    warning("Request to download did not complete successfully!")
+  }
+
+  # return the status list
+  return(status_json)
+}
+
+#' Request RDS data from the NHM data portal, returning as a dataframe-like.
+#'
+#' @param status_json A named list containing the request that was made.
+#' @param fmt Output format. Either a "data.frame" or "tibble".
+#' @return A dataframe or tibble assembled from one or more RDS files returned
+#'   by the API.
+#' @import httr2
+.RequestRDSDataFrame <- function(status_json, fmt = "data.frame") {
+  if (status_json$status != "complete") {
     stop(
-      paste(
-        "Argument fmt not recognised - please supply either 'data.frame'",
-        "or 'tibble'"
+      "Request didn't complete (no data to download): it may have timed out"
+    )
+  }
+
+  # get the location of where the data is saved to
+  data_zip_url <- status_json$urls$direct
+
+  # from stackoverflow
+  temp_zip <- tempfile()
+  download.file(data_zip_url, temp_zip)
+
+  # write to a tempfile then read into an RDS
+  outputs <- unzip(temp_zip, exdir = tempdir())
+  outputs <- outputs[basename(outputs) != "manifest.json"]
+
+  df <- do.call(
+    rbind,
+    unname(
+      lapply(
+        outputs,
+        \(output) {
+          return(readRDS(output))
+        }
       )
     )
+  )
+
+  # delete temporary files from the system
+  unlink(temp_zip)
+  unlink(outputs)
+
+  # coerce to tibble if needed
+  if (fmt == "data.frame") {
+    return(df)
+  } else if (fmt == "tibble") {
+    return(tibble::as_tibble(df))
   }
-
-  return(sls)
-}
-
-#' Format a resource URL as a string
-#'
-#' @param package_id A string for the package ID from the NHM data portal.
-#' @param resource_id A string for the resource ID from the NHM data portal.
-#'
-#' @returns A string with the url to the data to be downloaded.
-.GetURLString <- function(package_id, resource_id) {
-  return(
-    glue::glue(
-      "{base_url}/dataset/{package_id}/resource/{resource_id}/download"
-    )
-  )
-}
-
-#' Open URL connection and read RDS
-#'
-#' @param url_string A string (URL) to read the data from.
-#' @param ... Extra arguments passed into `readRDS`.
-#'
-#' @returns An R object read in from the RDS file at `url_string`.
-.ReadRDSURL <- function(url_string, ...) {
-  url_con <- url(
-    url_string,
-    "rb",
-    headers = c("User-Agent" = "predictsr user - Lead developer: connor.duffin@nhm.ac.uk")
-  )
-  on.exit(close(url_con))
-  return(readRDS(file = url_con, ...))
 }
