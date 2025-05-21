@@ -48,19 +48,19 @@ GetSitelevelSummaries <- function(fmt = "data.frame", extract = 2016) {
     stop("Incorrect 'extract' argument, should be 2016 and/or 2022")
   }
 
-  inputs <- data.frame(
-    year = c(2016, 2022), # char for easy comparison
-    packages = c(package_id_2016, package_id_2022),
-    resources = c(
-      "12f66228-4e23-4f0d-8435-18467e283512",
-      "83e40a70-bf91-4d85-b8af-adff624baab1"
+  # make sure order is 2016, 2022, then combine and read in request
+  extract <- sort(extract)
+  year_string <- paste(extract, collapse = "_")
+  site_req <- jsonlite::fromJSON(
+    system.file(
+      file.path("extdata", paste0("sitelevel_request_", year_string, ".json")),
+      package = "predictsr"
     )
-  ) |>
-    subset(year %in% extract) |>
-    dplyr::mutate(url_strings = .GetURLString(packages, resources))
+  )
 
-  extract <- lapply(inputs$url_strings, .GetResourceAsData, fmt = fmt)
-  return(do.call(rbind, extract))
+  # make the request for the final dataframe
+  predicts <- .RequestRDSDataFrame(site_req, fmt = fmt)
+  return(predicts)
 }
 
 #' Get a dataframe describing the columns in the PREDICTS database extract.
