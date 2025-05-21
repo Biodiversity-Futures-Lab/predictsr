@@ -73,15 +73,37 @@ GetColumnDescriptions <- function(fmt = "data.frame", ...) {
   # HACK(connor): currently we only use the data from the year 2022 as this
   # appears to be a "cleaned-up" version of the data. The 2016 appears to be
   # similar but lacks the structural improvements gotten in the 2022 release
-  resource_id <- "bae22f1a-b968-496d-8a61-b5d52659440b"
-  url_string <- .GetURLString(package_id_2022, resource_id)
+  if (!(fmt %in% c("data.frame", "tibble"))) {
+    stop("Please provide format as 'data.frame' or 'tibble'")
+  }
 
-  # Set up the URL connection
-  url_con <- url(
-    url_string,
-    headers = c("User-Agent" = "predictsr user - Lead developer: connor.duffin@nhm.ac.uk")
+  # column request is year-agnostic
+  column_req <- jsonlite::fromJSON(
+    system.file(
+      file.path("extdata", "column_request.json"),
+      package = "predictsr"
+    )
   )
-  output <- read.csv(url_con, ...)
+  status_json <- .RequestDataPortal(column_req)
+
+  # get the location of where the data is saved to
+  data_zip_url <- status_json$urls$direct
+
+  # from stackoverflow
+  temp_zip <- tempfile()
+  download.file(data_zip_url, temp_zip)
+
+  # write to a tempfile then read into an RDS
+  outputs <- unzip(temp_zip, exdir = tempdir())
+  output_zip <- outputs[basename(outputs) != "manifest.json"]
+
+  # should just be the remaining ZIP of the column descriptions
+  stopifnot(length(output_zip) == 1)
+  output <- read.csv(output_zip)
+
+  # delete temporary files from the system
+  unlink(temp_zip)
+  unlink(outputs)
 
   # Replace all names with underscores and get rid of all trailing underscores
   names(output) <- gsub("\\.", "_", names(output)) |>
