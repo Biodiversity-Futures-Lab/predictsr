@@ -15,6 +15,22 @@
 #'
 #' @export
 GetPredictsData <- function(fmt = "data.frame", extract = c(2016, 2022)) {
+  # should be a character of length 1
+  if (!(is.character(fmt) && length(fmt) == 1)) {
+    stop("Input fmt is not a length-1 character")
+  }
+
+  # should be a dataframe or a tibble, otherwise skip
+  if (fmt != "data.frame" && fmt != "tibble") {
+    stop(
+      paste(
+        "Argument fmt not recognised - please supply either 'data.frame'",
+        "or 'tibble'"
+      )
+    )
+  }
+
+  # check that the extract is OK
   if (!all(extract %in% c(2016, 2022)) || is.null(extract)) {
     stop("'extract' should be 2016 and/or 2022")
   }
@@ -30,7 +46,8 @@ GetPredictsData <- function(fmt = "data.frame", extract = c(2016, 2022)) {
   )
 
   # make the request for the final dataframe
-  predicts <- .RequestRDSDataFrame(predicts_req, fmt = fmt)
+  status_json <- .RequestDataPortal(predicts_req)
+  predicts <- .RequestRDSDataFrame(status_json, fmt = fmt)
   return(predicts)
 }
 
@@ -44,6 +61,21 @@ GetPredictsData <- function(fmt = "data.frame", extract = c(2016, 2022)) {
 #' @returns The site-level summary data in the format specified by 'fmt'.
 #' @export
 GetSitelevelSummaries <- function(fmt = "data.frame", extract = 2016) {
+  # should be a character of length 1
+  if (!(is.character(fmt) && length(fmt) == 1)) {
+    stop("Input fmt is not a length-1 character")
+  }
+
+  # should be a dataframe or a tibble, otherwise skip
+  if (fmt != "data.frame" && fmt != "tibble") {
+    stop(
+      paste(
+        "Argument fmt not recognised - please supply either 'data.frame'",
+        "or 'tibble'"
+      )
+    )
+  }
+
   if (!all(extract %in% c(2016, 2022)) || is.null(extract)) {
     stop("Incorrect 'extract' argument, should be 2016 and/or 2022")
   }
@@ -59,7 +91,8 @@ GetSitelevelSummaries <- function(fmt = "data.frame", extract = 2016) {
   )
 
   # make the request for the final dataframe
-  predicts <- .RequestRDSDataFrame(site_req, fmt = fmt)
+  status_json <- .RequestDataPortal(site_req)
+  predicts <- .RequestRDSDataFrame(status_json, fmt = fmt)
   return(predicts)
 }
 
@@ -73,8 +106,19 @@ GetColumnDescriptions <- function(fmt = "data.frame", ...) {
   # HACK(connor): currently we only use the data from the year 2022 as this
   # appears to be a "cleaned-up" version of the data. The 2016 appears to be
   # similar but lacks the structural improvements gotten in the 2022 release
-  if (!(fmt %in% c("data.frame", "tibble"))) {
-    stop("Please provide format as 'data.frame' or 'tibble'")
+  # should be a character of length 1
+  if (!(is.character(fmt) && length(fmt) == 1)) {
+    stop("Input fmt is not a length-1 character")
+  }
+
+  # should be a dataframe or a tibble, otherwise skip
+  if (fmt != "data.frame" && fmt != "tibble") {
+    stop(
+      paste(
+        "Argument fmt not recognised - please supply either 'data.frame'",
+        "or 'tibble'"
+      )
+    )
   }
 
   # column request is year-agnostic
@@ -115,65 +159,6 @@ GetColumnDescriptions <- function(fmt = "data.frame", ...) {
   }
 }
 
-#' From a given resource ID, retrieve the data at the location as a data.frame
-#' or tibble.
-#'
-#' @param fmt A string to give the output format, either 'data.frame' or
-#'   'tibble'. Defaults to a data frame.
-#' @param url_string A string giving the URL to download the resource from.
-#' @returns The site-level summary data in the format specified by 'fmt'.
-.GetResourceAsData <- function(fmt, url_string) {
-  # should be a character of length 1
-  if (!(is.character(fmt) && length(fmt) == 1)) {
-    stop("Input fmt is not a length-1 character")
-  }
-
-  if (fmt == "data.frame") {
-    sls <- .ReadRDSURL(url_string)
-  } else if (fmt == "tibble") {
-    sls <- .ReadRDSURL(url_string) |> tibble::as_tibble()
-  } else {
-    stop(
-      paste(
-        "Argument fmt not recognised - please supply either 'data.frame'",
-        "or 'tibble'"
-      )
-    )
-  }
-
-  return(sls)
-}
-
-#' Format a resource URL as a string
-#'
-#' @param package_id A string for the package ID from the NHM data portal.
-#' @param resource_id A string for the resource ID from the NHM data portal.
-#'
-#' @returns A string with the url to the data to be downloaded.
-.GetURLString <- function(package_id, resource_id) {
-  return(
-    glue::glue(
-      "{base_url}/dataset/{package_id}/resource/{resource_id}/download"
-    )
-  )
-}
-
-#' Open URL connection and read RDS
-#'
-#' @param url_string A string (URL) to read the data from.
-#' @param ... Extra arguments passed into `readRDS`.
-#'
-#' @returns An R object read in from the RDS file at `url_string`.
-.ReadRDSURL <- function(url_string, ...) {
-  url_con <- url(
-    url_string,
-    "rb",
-    headers = c("User-Agent" = "predictsr user - Lead developer: connor.duffin@nhm.ac.uk")
-  )
-  on.exit(close(url_con))
-  return(readRDS(file = url_con, ...))
-}
-
 #' Request data from the NHM data portal
 #'
 #' @param request_body_json A named list giving the body of the request.
@@ -186,19 +171,8 @@ GetColumnDescriptions <- function(fmt = "data.frame", ...) {
 #'   entry.
 #' @import httr2
 .RequestDataPortal <- function(request_body_json, timeout = 600) {
-  # should be a character of length 1
-  if (!(is.character(fmt) && length(fmt) == 1)) {
-    stop("Input fmt is not a length-1 character")
-  }
-
-  # should be a dataframe or a tibble, otherwise skip
-  if (fmt != "data.frame" && fmt != "tibble") {
-    stop(
-      paste(
-        "Argument fmt not recognised - please supply either 'data.frame'",
-        "or 'tibble'"
-      )
-    )
+  if (!is.list(request_body_json)) {
+    stop("request_body_json should be a list (use e.g. jsonlite::fromJSON)")
   }
 
   print("setting up request")
@@ -250,13 +224,11 @@ GetColumnDescriptions <- function(fmt = "data.frame", ...) {
 }
 
 #' Request RDS data from the NHM data portal, returning as a dataframe-like.
-#' Download and assemble data from a JSON-based RDS API
 #'
 #' @param status_json A named list containing the request that was made.
 #' @param fmt Output format. Either a "data.frame" or "tibble".
 #' @return A dataframe or tibble assembled from one or more RDS files returned
 #'   by the API.
-#'
 #' @import httr2
 .RequestRDSDataFrame <- function(status_json, fmt = "data.frame") {
   if (status_json$status != "complete") {
