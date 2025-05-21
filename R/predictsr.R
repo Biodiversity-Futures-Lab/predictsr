@@ -233,8 +233,7 @@ GetColumnDescriptions <- function(fmt = "data.frame", ...) {
 .RequestRDSDataFrame <- function(status_json, fmt = "data.frame") {
   if (status_json$status != "complete") {
     stop(
-      "Request did not complete successfully (no data to download!) - ",
-      "it may have timed out"
+      "Request didn't complete (no data to download): it may have timed out"
     )
   }
 
