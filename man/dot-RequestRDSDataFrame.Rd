@@ -2,24 +2,19 @@
 % Please edit documentation in R/predictsr.R
 \name{.RequestRDSDataFrame}
 \alias{.RequestRDSDataFrame}
-\title{Request RDS data from the NHM data portal, returning as a dataframe-like.
-Download and assemble data from a JSON-based RDS API}
+\title{Request RDS data from the NHM data portal, returning as a dataframe-like.}
 \usage{
-.RequestRDSDataFrame(request_body_json, fmt = "data.frame")
+.RequestRDSDataFrame(status_json, fmt = "data.frame")
 }
 \arguments{
-\item{request_body_json}{A named list or JSON-compatible object to be sent as
-the request body.}
+\item{status_json}{A named list containing the request that was made.}
 
-\item{fmt}{Output format. Currently only \code{"data.frame"} is supported.
-Reserved for future extension.}
+\item{fmt}{Output format. Either a "data.frame" or "tibble".}
 }
 \value{
 A dataframe or tibble assembled from one or more RDS files returned
 by the API.
 }
 \description{
-Sends a JSON-formatted request to the NHM Data Portal, monitors the status of
-the request, downloads the resulting ZIP archive containing RDS files, and
-combines them into a single data frame.
+Request RDS data from the NHM data portal, returning as a dataframe-like.
 }
