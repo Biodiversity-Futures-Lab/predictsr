@@ -6,3 +6,7 @@
 ^\.github$
 ^\.lintr$
 ^data-raw$
+^vignettes/\.quarto$
+^vignettes/*_files$
+^doc$
+^Meta$

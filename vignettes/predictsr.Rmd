@@ -1,0 +1,79 @@
+---
+title: "Introduction to predictsr"
+output: html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to predictsr}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+knitr:
+  opts_chunk:
+    collapse: true
+    comment: '#>'
+cache: true
+---
+
+The `{predictsr}` package is used to access the PREDICTS database from within `R`. It provides a set of functions that access the [NHM Data Portal](https://data.nhm.ac.uk/) to download the latest versions of the PREDICTS database and some related metadata easily, from within R. The [PREDICTS](https://www.nhm.ac.uk/our-science/research/projects/predicts/science.html) database comprises over 4 million measurements of species at sites across the world. The data are mostly collected from arthropods (mainly insects), and we cover about 2% of the species known by science. All major terrestrial plant, animal, and fungal groups are covered.
+
+There have been 2 public releases of PREDICTS data. The first was in [2016](https://data.nhm.ac.uk/dataset/the-2016-release-of-the-predicts-database-v1-1) and the second was in [2022](https://data.nhm.ac.uk/dataset/release-of-data-added-to-the-predicts-database-november-2022); each consisted of 3 million and 1 million records, respectively. We include both, as a single dataset, in this package.
+
+To get started, let's load in the data into `R` and poke around. I'll repeat the default options below, but you can specify either a `"data.frame"` or `"tibble"` as the format, and take either 2016, 2022, or both as the extracts to fetch.
+
+The default is to return a dataframe, and read in both extracts and concatenate into one:
+
+```{r setup}
+predicts <- predictsr::GetPredictsData(fmt = "data.frame", extract = c(2016, 2022))
+```
+
+```{r}
+str(predicts)
+```
+
+So we can see that there are over 4 million records in the combined PREDICTS extracts. Let's look at a set of summary statistics for the database:
+
+```{r}
+print(glue::glue(
+  "{length(unique(predicts$SSBS))} sites, ",
+  "{length(unique(predicts$Country))} countries, ",
+  "{length(unique(predicts$Species))} species"
+))
+```
+
+So over 30000 sites, 101 countries, and 12892 species in this dataframe! There are a couple of important columns that should be noted. Let's also check the ranges of sample collection in the database:
+
+```{r}
+print(glue::glue(
+  "Earliest sample collection (midpoint): {min(predicts$Sample_midpoint)}, ",
+  "latest sample collection (midpoint): {max(predicts$Sample_midpoint)}"
+))
+```
+
+## Accessing descriptions of the columns in PREDICTS
+
+We have 67 (!) columns in the PREDICTS database, and within the NHM Data portal releases, we have included a description of the data that is used in each of these columns.
+
+```{r}
+descriptions <- predictsr::GetColumnDescriptions(fmt = "data.frame")
+str(descriptions)
+```
+
+### Database columns and notes
+
+```{r, echo = FALSE, results = 'asis'}
+for (i in seq_along(descriptions$Column)) {
+  cat(
+    paste0("`", descriptions$Column[i], "` (`", descriptions$Type[i], "`)  \n")
+  )
+  notes <- descriptions$Notes[i] |>
+    (\(s) gsub("\\*", "-", s))() |>
+    (\(s) gsub("\n", "  \n", s))()
+
+  if (notes == " ") {
+    notes <- "As title."
+  }
+
+  cat(notes)
+  cat("  \n  \n")
+}
+```
+
+
