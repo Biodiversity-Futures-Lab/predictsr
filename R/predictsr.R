@@ -102,6 +102,7 @@ GetSitelevelSummaries <- function(fmt = "data.frame", extract = 2016) {
 #'   or 'tibble'.
 #' @param ... extra arguments passed to read.csv.
 #' @returns The column descriptions in the format as specified by 'fmt'.
+#' @export
 GetColumnDescriptions <- function(fmt = "data.frame", ...) {
   # HACK(connor): currently we only use the data from the year 2022 as this
   # appears to be a "cleaned-up" version of the data. The 2016 appears to be
