@@ -35,7 +35,9 @@ GetPredictsData <- function(fmt = "data.frame", extract = c(2016, 2022)) {
     stop("'extract' should be 2016 and/or 2022")
   }
 
-  # make sure order is 2016, 2022, then combine and read in request
+  logger::log_debug(
+    "Checking that order is correct; combining and building request from JSON"
+  )
   extract <- sort(extract)
   year_string <- paste(extract, collapse = "_")
   predicts_req <- jsonlite::fromJSON(
@@ -45,7 +47,9 @@ GetPredictsData <- function(fmt = "data.frame", extract = c(2016, 2022)) {
     )
   )
 
-  # make the request for the final dataframe
+  logger::log_debug(
+    "Request PREDICTS data and pull in data as dataframe, into R"
+  )
   status_json <- .RequestDataPortal(predicts_req)
   predicts <- .RequestRDSDataFrame(status_json, fmt = fmt)
   return(predicts)
@@ -80,7 +84,9 @@ GetSitelevelSummaries <- function(fmt = "data.frame", extract = 2016) {
     stop("Incorrect 'extract' argument, should be 2016 and/or 2022")
   }
 
-  # make sure order is 2016, 2022, then combine and read in request
+  logger::log_debug(
+    "Checking that order is correct; combining and building request from JSON"
+  )
   extract <- sort(extract)
   year_string <- paste(extract, collapse = "_")
   site_req <- jsonlite::fromJSON(
@@ -90,7 +96,9 @@ GetSitelevelSummaries <- function(fmt = "data.frame", extract = 2016) {
     )
   )
 
-  # make the request for the final dataframe
+  logger::log_debug(
+    "Request PREDICTS summary data from the data portal and pull into R"
+  )
   status_json <- .RequestDataPortal(site_req)
   predicts <- .RequestRDSDataFrame(status_json, fmt = fmt)
   return(predicts)
@@ -123,6 +131,10 @@ GetColumnDescriptions <- function(fmt = "data.frame", ...) {
   }
 
   # column request is year-agnostic
+  logger::log_debug(
+    "Load in column descriptions JSON request, and make the first request",
+    " (this will fetch a status endpoint which we will check)"
+  )
   column_req <- jsonlite::fromJSON(
     system.file(
       file.path("extdata", "column_request.json"),
@@ -131,14 +143,15 @@ GetColumnDescriptions <- function(fmt = "data.frame", ...) {
   )
   status_json <- .RequestDataPortal(column_req)
 
-  # get the location of where the data is saved to
+  logger::log_debug("Pluck the download URL, and download to ZIP")
   data_zip_url <- status_json$urls$direct
 
-  # from stackoverflow
   temp_zip <- tempfile()
   download.file(data_zip_url, temp_zip)
 
-  # write to a tempfile then read into an RDS
+  logger::log_debug(
+    "Unzip the download and get the column description csv"
+  )
   outputs <- unzip(temp_zip, exdir = tempdir())
   output_zip <- outputs[basename(outputs) != "manifest.json"]
 
@@ -146,11 +159,11 @@ GetColumnDescriptions <- function(fmt = "data.frame", ...) {
   stopifnot(length(output_zip) == 1)
   output <- read.csv(output_zip)
 
-  # delete temporary files from the system
+  logger::log_debug("Delete the temporary files from the system")
   unlink(temp_zip)
   unlink(outputs)
 
-  # Replace all names with underscores and get rid of all trailing underscores
+  logger::log_debug("Fix up column names before returning as appropriate type")
   names(output) <- gsub("\\.", "_", names(output)) |>
     (\(n) sub("_+$", "", n))()
   if (fmt == "tibble") {
@@ -176,8 +189,9 @@ GetColumnDescriptions <- function(fmt = "data.frame", ...) {
     stop("request_body_json should be a list (use e.g. jsonlite::fromJSON)")
   }
 
-  print("setting up request")
-  # set the download request: retry for common error codes, or if curl fails
+  logger::log_debug(
+    "Set the download request: retry for common error codes, or if curl fails"
+  )
   dl_request <- request(download_url) |>
     req_body_json(request_body_json) |>
     req_user_agent("predictsr resource download request <connor.duffin@nhm.ac.uk>") |>
@@ -187,18 +201,16 @@ GetColumnDescriptions <- function(fmt = "data.frame", ...) {
       retry_on_failure = TRUE
     )
 
-  print("fetch DL request")
-  # fetch the download request
+  logger::log_debug("Fetch the download request")
   dl_response <- req_perform(dl_request) |>
     resp_body_json()
 
-  # check on the status of the download
+  logger::log_debug("Check on the status of the download (every 0.5 s)")
   status_json_request <- request(dl_response$result$status_json) |>
     req_throttle(120) |>  # 120 requests every 60s
     req_user_agent("predictsr status request <connor.duffin@nhm.ac.uk>")
 
-  print("make initial status request")
-  # make initial request to get status
+  logger::log_debug("Make initial status request to check it is working")
   status_json <- status_json_request |>
     req_perform() |>
     resp_body_json()
@@ -206,7 +218,7 @@ GetColumnDescriptions <- function(fmt = "data.frame", ...) {
   # we make 2 requests per second, so we will finish up after `timeout` seconds
   ticks <- 2 * timeout
   for (i in 1:ticks) {
-    print("DL request in progress")
+    logger::log_info("Download request in progress")
     # break out once it has worked
     if (status_json$status == "complete") {
       break
@@ -241,30 +253,26 @@ GetColumnDescriptions <- function(fmt = "data.frame", ...) {
     )
   }
 
-  # get the location of where the data is saved to
+  logger::log_debug("Get the location of where the data is saved to")
   data_zip_url <- status_json$urls$direct
 
-  # from stackoverflow
+  logger::log_debug("Download data into a tempfile")
   temp_zip <- tempfile()
-  download.file(data_zip_url, temp_zip)
+  download.file(data_zip_url, temp_zip, quiet = TRUE)
 
-  # write to a tempfile then read into an RDS
+  logger::log_debug("Write to a tempfile then read into an RDS")
   outputs <- unzip(temp_zip, exdir = tempdir())
   outputs <- outputs[basename(outputs) != "manifest.json"]
 
+  logger::log_debug("Row-bind the unnamed list of read-in dataframes")
   df <- do.call(
     rbind,
     unname(
-      lapply(
-        outputs,
-        \(output) {
-          return(readRDS(output))
-        }
-      )
+      lapply(outputs, \(output) readRDS(output))
     )
   )
 
-  # delete temporary files from the system
+  logger::log_debug("Delete temporary files from the system")
   unlink(temp_zip)
   unlink(outputs)
 

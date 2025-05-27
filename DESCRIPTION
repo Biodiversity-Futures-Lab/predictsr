@@ -17,6 +17,7 @@ Imports:
     glue,
     httr2,
     jsonlite,
+    logger,
     tibble
 Suggests:
     knitr,
