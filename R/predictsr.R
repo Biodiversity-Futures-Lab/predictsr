@@ -218,7 +218,7 @@ GetColumnDescriptions <- function(fmt = "data.frame", ...) {
   # we make 2 requests per second, so we will finish up after `timeout` seconds
   ticks <- 2 * timeout
   for (i in 1:ticks) {
-    logger::log_info("Download request in progress")
+    logger::log_debug("Download request in progress")
     # break out once it has worked
     if (status_json$status == "complete") {
       break
