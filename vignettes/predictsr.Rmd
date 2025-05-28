@@ -16,15 +16,12 @@ The `{predictsr}` package is used to access the PREDICTS database from within `R
 
 There have been 2 public releases of PREDICTS data. The first was in [2016](https://data.nhm.ac.uk/dataset/the-2016-release-of-the-predicts-database-v1-1) and the second was in [2022](https://data.nhm.ac.uk/dataset/release-of-data-added-to-the-predicts-database-november-2022); each consisted of 3 million and 1 million records, respectively. We include both, as a single dataset, in this package.
 
-To get started, let's load in the data into `R` and poke around. I'll repeat the default options below, but you can specify either a `"data.frame"` or `"tibble"` as the format, and take either 2016, 2022, or both as the extracts to fetch.
+To get started, let's load in the data into `R` and poke around. To do so you will use the `GetPredictsData` function, which pulls in the data from the data portal.
 
-The default is to return a dataframe, and read in both extracts and concatenate into one:
+I'll repeat the default options below, but you can specify either a `"data.frame"` or `"tibble"` as the format, and take either 2016, 2022, or both as the extracts to fetch. The default is to return a dataframe, and read in both extracts and concatenate into one:
 
 ```{r setup}
 predicts <- predictsr::GetPredictsData(fmt = "data.frame", extract = c(2016, 2022))
-```
-
-```{r}
 str(predicts)
 ```
 
@@ -32,13 +29,16 @@ So we can see that there are over 4 million records in the combined PREDICTS ext
 
 ```{r}
 print(glue::glue(
-  "{length(unique(predicts$SSBS))} sites, ",
-  "{length(unique(predicts$Country))} countries, ",
-  "{length(unique(predicts$Species))} species"
+  "This database has {length(unique(predicts$SS))} studies across ",
+  "{length(unique(predicts$SSBS))} sites, in ",
+  "{length(unique(predicts$Country))} countries, and with ",
+  "{length(unique(predicts$Species))} species."
 ))
 ```
 
-So over 30000 sites, 101 countries, and 12892 species in this dataframe! There are a couple of important columns that should be noted. Let's also check the ranges of sample collection in the database:
+So over 30,000 sites, 101 countries, and 12,892 species in this dataframe! There are a couple of important columns that should be noted. The `SS` column is generally what we use to identify studies when dealing with PREDICTS data. This is the concantenation of the `Source_ID`, and the `Study_number` columns. Another important identifier is the `SBBS`, the concatenation of `Source_ID`, `Study_number`, `Block` and `Site_number`, which is what we use to identify single sites in the database.
+
+Let's also check the ranges of sample collection in the database:
 
 ```{r}
 print(glue::glue(
@@ -47,9 +47,17 @@ print(glue::glue(
 ))
 ```
 
+## Accessing site-level summaries
+
+We also include access to the site-level summaries from the full release. To get *these data* you will need to use the `GetSitelevelSummaries` function. It has the same arguments as the `GetPredictsData` function, so the function call is very similar to pull in the summaries for the same data as above:
+
+```{r}
+summaries <- predictsr::GetSitelevelSummaries(fmt = "data.frame", extract = c(2016, 2022))
+```
+
 ## Accessing descriptions of the columns in PREDICTS
 
-We have 67 (!) columns in the PREDICTS database, and within the NHM Data portal releases, we have included a description of the data that is used in each of these columns.
+We have 67 (!) columns in the PREDICTS database, and within the NHM Data portal releases, we have included a description of the data that is used in each of these columns. You can access this via the `GetColumnDescriptions` function:
 
 ```{r}
 descriptions <- predictsr::GetColumnDescriptions(fmt = "data.frame")
@@ -57,6 +65,8 @@ str(descriptions)
 ```
 
 ### Database columns and notes
+
+The columns are described as follows:
 
 ```{r, echo = FALSE, results = 'asis'}
 for (i in seq_along(descriptions$Column)) {
