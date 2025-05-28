@@ -4,18 +4,15 @@
 \alias{GetSitelevelSummaries}
 \title{Get the site level summaries from the RDS file.}
 \usage{
-GetSitelevelSummaries(fmt = "data.frame", extract = 2016)
+GetSitelevelSummaries(extract = 2016)
 }
 \arguments{
-\item{fmt}{A string to give the output format, either 'data.frame' or
-'tibble'. Defaults to a data frame.}
-
 \item{extract}{Numeric, year/s corresponding to PREDICTS database releases to
 download. Options are 2016 or 2022. Defaults to \code{c(2016, 2022)} - the whole
 dataset.}
 }
 \value{
-The site-level summary data in the format specified by 'fmt'.
+The site-level summary data as a dataframe.
 }
 \description{
 Get the site level summaries from the RDS file.

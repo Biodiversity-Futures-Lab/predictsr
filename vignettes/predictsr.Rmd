@@ -18,10 +18,10 @@ There have been 2 public releases of PREDICTS data. The first was in [2016](http
 
 To get started, let's load in the data into `R` and poke around. To do so you will use the `GetPredictsData` function, which pulls in the data from the data portal.
 
-I'll repeat the default options below, but you can specify either a `"data.frame"` or `"tibble"` as the format, and take either 2016, 2022, or both as the extracts to fetch. The default is to return a dataframe, and read in both extracts and concatenate into one:
+I'll repeat the default option below, but you can take either 2016, 2022, or both as the extracts to fetch. It returns a dataframe, and read in both extracts and concatenate into one:
 
 ```{r setup}
-predicts <- predictsr::GetPredictsData(fmt = "data.frame", extract = c(2016, 2022))
+predicts <- predictsr::GetPredictsData(extract = c(2016, 2022))
 str(predicts)
 ```
 
@@ -49,10 +49,11 @@ print(glue::glue(
 
 ## Accessing site-level summaries
 
-We also include access to the site-level summaries from the full release. To get *these data* you will need to use the `GetSitelevelSummaries` function. It has the same arguments as the `GetPredictsData` function, so the function call is very similar to pull in the summaries for the same data as above:
+We also include access to the site-level summaries from the full release. To get *these data* you will need to use the `GetSitelevelSummaries` function. The function call is very similar to pull in the summaries for the same data as above:
 
 ```{r}
-summaries <- predictsr::GetSitelevelSummaries(fmt = "data.frame", extract = c(2016, 2022))
+summaries <- predictsr::GetSitelevelSummaries(extract = c(2016, 2022))
+str(summaries)
 ```
 
 ## Accessing descriptions of the columns in PREDICTS
@@ -60,7 +61,7 @@ summaries <- predictsr::GetSitelevelSummaries(fmt = "data.frame", extract = c(20
 We have 67 (!) columns in the PREDICTS database, and within the NHM Data portal releases, we have included a description of the data that is used in each of these columns. You can access this via the `GetColumnDescriptions` function:
 
 ```{r}
-descriptions <- predictsr::GetColumnDescriptions(fmt = "data.frame")
+descriptions <- predictsr::GetColumnDescriptions()
 str(descriptions)
 ```
 

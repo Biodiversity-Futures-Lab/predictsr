@@ -1,4 +1,4 @@
-#' Read the PREDICTS database into either a data frame or a tibble
+#' Read the PREDICTS database into either a dataframe.
 #'
 #' This returns the complete PREDICTS database extract from the latest release
 #' (v1.1, 2016). It comprises of 3,278,056 measurements, from 26,194 sampling
@@ -6,30 +6,13 @@
 #' collected as part of the PREDICTS project - Projecting Responses of
 #' Ecological Diversity In Changing Terrestrial Systems.
 #'
-#' @param fmt string, the format to return the data as. Options are 'data.frame'
-#'   or 'tibble'.
 #' @param extract numeric, year/s corresponding to PREDICTS database releases to
 #'   download. Options are 2016 or 2022. Defaults to `c(2016, 2022)` - the whole
 #'   dataset.
-#' @returns A data.frame or tibble containing the full v1.1 PREDICTS database.
+#' @returns A dataframe containing the v1.1 PREDICTS database extract/s.
 #'
 #' @export
-GetPredictsData <- function(fmt = "data.frame", extract = c(2016, 2022)) {
-  # should be a character of length 1
-  if (!(is.character(fmt) && length(fmt) == 1)) {
-    stop("Input fmt is not a length-1 character")
-  }
-
-  # should be a dataframe or a tibble, otherwise skip
-  if (fmt != "data.frame" && fmt != "tibble") {
-    stop(
-      paste(
-        "Argument fmt not recognised - please supply either 'data.frame'",
-        "or 'tibble'"
-      )
-    )
-  }
-
+GetPredictsData <- function(extract = c(2016, 2022)) {
   # check that the extract is OK
   if (!all(extract %in% c(2016, 2022)) || is.null(extract)) {
     stop("'extract' should be 2016 and/or 2022")
@@ -51,35 +34,18 @@ GetPredictsData <- function(fmt = "data.frame", extract = c(2016, 2022)) {
     "Request PREDICTS data and pull in data as dataframe, into R"
   )
   status_json <- .RequestDataPortal(predicts_req)
-  predicts <- .RequestRDSDataFrame(status_json, fmt = fmt)
+  predicts <- .RequestRDSDataFrame(status_json)
   return(predicts)
 }
 
 #' Get the site level summaries from the RDS file.
 #'
-#' @param fmt A string to give the output format, either 'data.frame' or
-#'   'tibble'. Defaults to a data frame.
 #' @param extract Numeric, year/s corresponding to PREDICTS database releases to
 #'   download. Options are 2016 or 2022. Defaults to `c(2016, 2022)` - the whole
 #'   dataset.
-#' @returns The site-level summary data in the format specified by 'fmt'.
+#' @returns The site-level summary data as a dataframe.
 #' @export
-GetSitelevelSummaries <- function(fmt = "data.frame", extract = 2016) {
-  # should be a character of length 1
-  if (!(is.character(fmt) && length(fmt) == 1)) {
-    stop("Input fmt is not a length-1 character")
-  }
-
-  # should be a dataframe or a tibble, otherwise skip
-  if (fmt != "data.frame" && fmt != "tibble") {
-    stop(
-      paste(
-        "Argument fmt not recognised - please supply either 'data.frame'",
-        "or 'tibble'"
-      )
-    )
-  }
-
+GetSitelevelSummaries <- function(extract = 2016) {
   if (!all(extract %in% c(2016, 2022)) || is.null(extract)) {
     stop("Incorrect 'extract' argument, should be 2016 and/or 2022")
   }
@@ -100,35 +66,20 @@ GetSitelevelSummaries <- function(fmt = "data.frame", extract = 2016) {
     "Request PREDICTS summary data from the data portal and pull into R"
   )
   status_json <- .RequestDataPortal(site_req)
-  predicts <- .RequestRDSDataFrame(status_json, fmt = fmt)
+  predicts <- .RequestRDSDataFrame(status_json)
   return(predicts)
 }
 
 #' Get a dataframe describing the columns in the PREDICTS database extract.
 #'
-#' @param fmt string, the format to return the data as. Options are 'data.frame'
-#'   or 'tibble'.
 #' @param ... extra arguments passed to read.csv.
-#' @returns The column descriptions in the format as specified by 'fmt'.
+#' @returns The column descriptions in the format as a dataframe.
 #' @export
-GetColumnDescriptions <- function(fmt = "data.frame", ...) {
+GetColumnDescriptions <- function(...) {
   # HACK(connor): currently we only use the data from the year 2022 as this
   # appears to be a "cleaned-up" version of the data. The 2016 appears to be
   # similar but lacks the structural improvements gotten in the 2022 release
   # should be a character of length 1
-  if (!(is.character(fmt) && length(fmt) == 1)) {
-    stop("Input fmt is not a length-1 character")
-  }
-
-  # should be a dataframe or a tibble, otherwise skip
-  if (fmt != "data.frame" && fmt != "tibble") {
-    stop(
-      paste(
-        "Argument fmt not recognised - please supply either 'data.frame'",
-        "or 'tibble'"
-      )
-    )
-  }
 
   # column request is year-agnostic
   logger::log_debug(
@@ -166,11 +117,8 @@ GetColumnDescriptions <- function(fmt = "data.frame", ...) {
   logger::log_debug("Fix up column names before returning as appropriate type")
   names(output) <- gsub("\\.", "_", names(output)) |>
     (\(n) sub("_+$", "", n))()
-  if (fmt == "tibble") {
-    return(tibble::as_tibble(output))
-  } else {
-    return(output)
-  }
+
+  return(output)
 }
 
 #' Request data from the NHM data portal
@@ -242,11 +190,10 @@ GetColumnDescriptions <- function(fmt = "data.frame", ...) {
 #'
 #' @param status_json A named list containing the request that was made. This
 #'   should be marked as "complete" via its 'status' field.
-#' @param fmt Output format. Either a "data.frame" or "tibble".
-#' @return A dataframe or tibble assembled from one or more RDS files returned
+#' @return A dataframe assembled from one or more RDS files returned
 #'   by the API.
 #' @import httr2
-.RequestRDSDataFrame <- function(status_json, fmt = "data.frame") {
+.RequestRDSDataFrame <- function(status_json) {
   if (status_json$status != "complete") {
     stop(
       "Request didn't complete (no data to download): it may have timed out"
@@ -276,10 +223,5 @@ GetColumnDescriptions <- function(fmt = "data.frame", ...) {
   unlink(temp_zip)
   unlink(outputs)
 
-  # coerce to tibble if needed
-  if (fmt == "data.frame") {
-    return(df)
-  } else if (fmt == "tibble") {
-    return(tibble::as_tibble(df))
-  }
+  return(df)
 }

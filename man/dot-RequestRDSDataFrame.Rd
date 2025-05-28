@@ -4,16 +4,14 @@
 \alias{.RequestRDSDataFrame}
 \title{Request RDS data from the NHM data portal, returning as a dataframe-like.}
 \usage{
-.RequestRDSDataFrame(status_json, fmt = "data.frame")
+.RequestRDSDataFrame(status_json)
 }
 \arguments{
 \item{status_json}{A named list containing the request that was made. This
 should be marked as "complete" via its 'status' field.}
-
-\item{fmt}{Output format. Either a "data.frame" or "tibble".}
 }
 \value{
-A dataframe or tibble assembled from one or more RDS files returned
+A dataframe assembled from one or more RDS files returned
 by the API.
 }
 \description{

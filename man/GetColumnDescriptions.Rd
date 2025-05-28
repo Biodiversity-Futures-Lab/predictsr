@@ -4,16 +4,13 @@
 \alias{GetColumnDescriptions}
 \title{Get a dataframe describing the columns in the PREDICTS database extract.}
 \usage{
-GetColumnDescriptions(fmt = "data.frame", ...)
+GetColumnDescriptions(...)
 }
 \arguments{
-\item{fmt}{string, the format to return the data as. Options are 'data.frame'
-or 'tibble'.}
-
 \item{...}{extra arguments passed to read.csv.}
 }
 \value{
-The column descriptions in the format as specified by 'fmt'.
+The column descriptions in the format as a dataframe.
 }
 \description{
 Get a dataframe describing the columns in the PREDICTS database extract.

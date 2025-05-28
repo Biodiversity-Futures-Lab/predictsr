@@ -2,20 +2,17 @@
 % Please edit documentation in R/predictsr.R
 \name{GetPredictsData}
 \alias{GetPredictsData}
-\title{Read the PREDICTS database into either a data frame or a tibble}
+\title{Read the PREDICTS database into either a dataframe.}
 \usage{
-GetPredictsData(fmt = "data.frame", extract = c(2016, 2022))
+GetPredictsData(extract = c(2016, 2022))
 }
 \arguments{
-\item{fmt}{string, the format to return the data as. Options are 'data.frame'
-or 'tibble'.}
-
 \item{extract}{numeric, year/s corresponding to PREDICTS database releases to
 download. Options are 2016 or 2022. Defaults to \code{c(2016, 2022)} - the whole
 dataset.}
 }
 \value{
-A data.frame or tibble containing the full v1.1 PREDICTS database.
+A dataframe containing the v1.1 PREDICTS database extract/s.
 }
 \description{
 This returns the complete PREDICTS database extract from the latest release

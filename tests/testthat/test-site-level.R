@@ -77,41 +77,7 @@ test_that("can read in the site-level summaries", {
   CheckSitelevelData(sls)
 })
 
-test_that("can read in the site-level summaries as a tibble", {
-  skip_on_ci()
-  sls <- GetSitelevelSummaries(fmt = "tibble")
-
-  # check that DF with expected attributes
-  expect_true(tibble::is_tibble(sls))
-  CheckSitelevelData(sls)
-})
-
-test_that("breaks when fmt is not data.frame or tibble", {
-  # check string expectations match up
-  expect_error(
-    GetSitelevelSummaries("df"),
-    regexp = paste(
-      "Argument fmt not recognised - please supply either 'data.frame'",
-      "or 'tibble'"
-    )
-  )
-  expect_error(
-    GetSitelevelSummaries("Tibble"),
-    regexp = paste(
-      "Argument fmt not recognised - please supply either 'data.frame'",
-      "or 'tibble'"
-    )
-  )
-
-  # check that vectors break it
-  expect_error(GetSitelevelSummaries(fmt = c("tibble", "data.frame")))
-
-  # check non-character fmt arguments
-  expect_error(GetSitelevelSummaries(fmt = NA))
-  expect_error(GetSitelevelSummaries(fmt = 123))
-  expect_error(GetSitelevelSummaries(fmt = NULL))
-
-  # weird years
+test_that("Breaks when we have incorrect extracts", {
   expect_error(GetSitelevelSummaries(extract = NA))
   expect_error(GetSitelevelSummaries(extract = 123))
   expect_error(GetSitelevelSummaries(extract = NULL))

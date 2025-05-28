@@ -31,45 +31,4 @@ test_that("We can get the column descriptions as desired", {
     "Wilderness_area", "Years_since_fragmentation_or_conversion"
   )
   expect_equal(columns$Column, names)
-
-  # Now check that we can get a tibble as required
-  columns <- GetColumnDescriptions(fmt = "tibble") |> dplyr::arrange(Column)
-  expect_true(tibble::is_tibble(columns))
-  expect_equal(nrow(columns), 69)
-  expect_equal(ncol(columns), 8)
-  expect_equal(
-    names(columns),
-    c("Column", "Applies_to", "Site_extract", "Diversity_extract", "Type",
-      "Value_guaranteed_to_be_non_empty", "Notes", "Validation")
-  )
-  expect_equal(columns$Column, names)
-})
-
-test_that("GetColumnDescriptions fails with incorrect format", {
-  # check string expectations match up
-  expect_error(
-    GetColumnDescriptions("df"),
-    regexp = paste(
-      "Argument fmt not recognised - please supply either 'data.frame'",
-      "or 'tibble'"
-    )
-  )
-  expect_error(
-    GetColumnDescriptions("Tibble"),
-    regexp = paste(
-      "Argument fmt not recognised - please supply either 'data.frame'",
-      "or 'tibble'"
-    )
-  )
-
-  # can't work for a vector
-  expect_error(
-    GetColumnDescriptions(fmt = c("data.frame", "tibble")),
-    regexp = "Input fmt is not a length-1 character"
-  )
-
-  # non-character formats
-  expect_error(GetColumnDescriptions(fmt = NA))
-  expect_error(GetColumnDescriptions(fmt = 123))
-  expect_error(GetColumnDescriptions(fmt = NULL))
 })

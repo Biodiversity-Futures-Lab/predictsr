@@ -83,49 +83,7 @@ test_that("Can read in the 2022 PREDICTS database extract", {
   expect_equal(length(unique(predicts$Source_ID)), 115)
 })
 
-test_that("Can read in the PREDICTS database extract into tibbles", {
-  skip_on_ci()
-  predicts <- GetPredictsData("tibble")
-  expect_true(tibble::is_tibble(predicts))
-  CheckPREDICTSData(predicts)
-
-  predicts_2016 <- GetPredictsData("tibble", 2016)
-  expect_true(tibble::is_tibble(predicts))
-  CheckPREDICTSData(predicts)
-
-  predicts_2016 <- GetPredictsData("tibble", 2022)
-  expect_true(tibble::is_tibble(predicts))
-  CheckPREDICTSData(predicts, full = FALSE)
-})
-
-test_that("fails with incorrect format", {
-  # check string expectations match up
-  expect_error(
-    GetPredictsData("df"),
-    regexp = paste(
-      "Argument fmt not recognised - please supply either 'data.frame'",
-      "or 'tibble'"
-    )
-  )
-  expect_error(
-    GetPredictsData("Tibble"),
-    regexp = paste(
-      "Argument fmt not recognised - please supply either 'data.frame'",
-      "or 'tibble'"
-    )
-  )
-
-  # can't work for a vector
-  expect_error(
-    GetPredictsData(fmt = c("data.frame", "tibble")),
-    regexp = "Input fmt is not a length-1 character"
-  )
-
-  # non-character formats
-  expect_error(GetPredictsData(fmt = NA))
-  expect_error(GetPredictsData(fmt = 123))
-  expect_error(GetPredictsData(fmt = NULL))
-
+test_that("Fails with incorrect inputs", {
   # weird years
   expect_error(GetPredictsData(extract = NA))
   expect_error(GetPredictsData(extract = 123))
