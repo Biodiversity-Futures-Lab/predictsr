@@ -12,7 +12,7 @@ The PREDICTS (Projecting Responses of Ecological Diversity In Changing Terrestri
 
 The data were collated from spatial comparisons of local-scale biodiversity exposed to different intensities and types of anthropogenic pressures, from terrestrial sites around the world.
 
-This package accesses the latest version of the open-access database as a data.frame or a [tibble](https://tibble.tidyverse.org/). The available data is both the 2016 and 2022 releases of the database.
+This package accesses the latest version of the open-access database as a dataframe. The available data is both the 2016 and 2022 releases of the database.
 
 The package is very much in-development so there may be changes to the API as we refine the codebase.
 
@@ -55,5 +55,5 @@ which will give you a dataframe on the information on the columns that are in th
 
 The Natural History Museum cannot warrant the quality or accuracy of the data.
 
-This package builds upon the [NHM data portal API](https://data.nhm.ac.uk/terms-conditions), which by default has no API rate
-limits. Please respect this and be responsible with your access.
+This package builds upon the [NHM data portal API](https://data.nhm.ac.uk/about/download), which by default has no API rate
+limits. Please respect this and be responsible with your access. See also the [terms and conditions](https://data.nhm.ac.uk/terms-conditions) on the use of the Data Portal.
