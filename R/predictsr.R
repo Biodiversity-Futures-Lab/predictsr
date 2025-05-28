@@ -134,7 +134,7 @@ GetColumnDescriptions <- function(...) {
 #' @import httr2
 .RequestDataPortal <- function(request_body_json, timeout = 600) {
   if (!is.list(request_body_json)) {
-    stop("request_body_json should be a list (use e.g. jsonlite::fromJSON)")
+    stop("Request_body_json should be a list (use e.g. jsonlite::fromJSON)")
   }
 
   logger::log_debug(
@@ -142,7 +142,9 @@ GetColumnDescriptions <- function(...) {
   )
   dl_request <- request(download_url) |>
     req_body_json(request_body_json) |>
-    req_user_agent("predictsr resource download request <connor.duffin@nhm.ac.uk>") |>
+    req_user_agent(
+      "predictsr resource download request <connor.duffin@nhm.ac.uk>"
+    ) |>
     req_retry(
       is_transient = \(resp) resp_status(resp) %in% c(409, 429, 500, 503),
       max_tries = 10,

@@ -1,6 +1,6 @@
 ^renv$
 ^renv\.lock$
-^20250422-predicts-database-pkg\.Rproj$
+^predictsr\.Rproj$
 ^\.Rproj\.user$
 ^LICENSE\.md$
 ^\.github$
@@ -8,5 +8,6 @@
 ^data-raw$
 ^vignettes/\.quarto$
 ^vignettes/*_files$
+^scripts$
 ^doc$
 ^Meta$

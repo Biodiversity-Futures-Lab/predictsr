@@ -1,7 +1,9 @@
 test_that("We can get the column descriptions as desired", {
-  skip_on_ci()
+  skip_if_offline("data.nhm.ac.uk")
   # Basic checks for the case that we have a data.frame output
-  columns <- GetColumnDescriptions() |> dplyr::arrange(Column)
+  columns <- GetColumnDescriptions()
+  columns <- columns[order(columns$Column), ]
+
   expect_equal(nrow(columns), 69)
   expect_equal(ncol(columns), 8)
   expect_equal(

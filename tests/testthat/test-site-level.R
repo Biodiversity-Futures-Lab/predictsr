@@ -69,7 +69,7 @@ CheckSitelevelData <- function(sls) {
 }
 
 test_that("can read in the site-level summaries", {
-  skip_on_ci()
+  skip_if_offline("data.nhm.ac.uk")
   sls <- GetSitelevelSummaries()
 
   # check that DF with expected attributes
