@@ -12,13 +12,11 @@ knitr:
 cache: true
 ---
 
-The `{predictsr}` package is used to access the PREDICTS database from within `R`. It provides a set of functions that access the [NHM Data Portal](https://data.nhm.ac.uk/) to download the latest versions of the PREDICTS database and some related metadata easily, from within R. The [PREDICTS](https://www.nhm.ac.uk/our-science/research/projects/predicts/science.html) database comprises over 4 million measurements of species at sites across the world. The data are mostly collected from arthropods (mainly insects), and we cover about 2% of the species known by science. All major terrestrial plant, animal, and fungal groups are covered.
+The [`predictsr`](https://github.com/Biodiversity-Futures-Lab/predictsr) package accesses the PREDICTS database from within R, conveniently as a dataframe. It uses the [Natural History Museum Data Portal](https://data.nhm.ac.uk/) to download the latest versions of the PREDICTS database and some related metadata. 
 
-There have been 2 public releases of PREDICTS data. The first was in [2016](https://data.nhm.ac.uk/dataset/the-2016-release-of-the-predicts-database-v1-1) and the second was in [2022](https://data.nhm.ac.uk/dataset/release-of-data-added-to-the-predicts-database-november-2022); each consisted of 3 million and 1 million records, respectively. We include both, as a single dataset, in this package.
+The [PREDICTS](https://www.nhm.ac.uk/our-science/research/projects/predicts/science.html) database comprises over 4 million measurements of species at sites across the world. The data are mostly collected from arthropods (mainly insects), and we cover about 2% of the species known by science. All major terrestrial plant, animal, and fungal groups are covered. There have been 2 public releases of PREDICTS data. The first was in [2016](https://data.nhm.ac.uk/dataset/the-2016-release-of-the-predicts-database-v1-1) and the second was in [2022](https://data.nhm.ac.uk/dataset/release-of-data-added-to-the-predicts-database-november-2022); each consisted of about 3 million and 1 million records, respectively. We include both, as a single dataset, in this package.
 
-To get started, let's load in the data into `R` and poke around. To do so you will use the `GetPredictsData` function, which pulls in the data from the data portal.
-
-I'll repeat the default option below, but you can take either 2016, 2022, or both as the extracts to fetch. It returns a dataframe, and read in both extracts and concatenate into one:
+To get started, let's load in the database into R and poke around. To do so you will use the `GetPredictsData` function, which pulls in the data from the data portal. I'll repeat the default option below, but you can take either 2016, 2022, or both as the extracts to fetch. It reads in both extracts into a single dataframe:
 
 ```{r setup}
 predicts <- predictsr::GetPredictsData(extract = c(2016, 2022))
@@ -36,7 +34,7 @@ print(glue::glue(
 ))
 ```
 
-So over 30,000 sites, 101 countries, and 12,892 species in this dataframe! There are a couple of important columns that should be noted. The `SS` column is generally what we use to identify studies when dealing with PREDICTS data. This is the concantenation of the `Source_ID`, and the `Study_number` columns. Another important identifier is the `SBBS`, the concatenation of `Source_ID`, `Study_number`, `Block` and `Site_number`, which is what we use to identify single sites in the database.
+So over 30,000 sites, 101 countries, and 12,892 species in this dataframe! There are a couple of important columns that should be noted. The `SS` column is what we use to identify studies when dealing with PREDICTS data. This is the concantenation of the `Source_ID`, and the `Study_number` columns. Another important identifier is the `SBBS`, the concatenation of `Source_ID`, `Study_number`, `Block` and `Site_number`, which is what we use to identify single sites in the database.
 
 Let's also check the ranges of sample collection in the database:
 
@@ -47,35 +45,71 @@ print(glue::glue(
 ))
 ```
 
+**NOTE:** maybe a plot here to demonstrate the different taxonomic coverage? But I'm not sure how to relicate what is out there...
+
 ## Accessing site-level summaries
 
-We also include access to the site-level summaries from the full release. To get *these data* you will need to use the `GetSitelevelSummaries` function. The function call is very similar to pull in the summaries for the same data as above:
+We also include access to the site-level summaries from the full release; to get *these data* you will need to use the `GetSitelevelSummaries` function. The function call is very similar to pull in the summaries for the same data as above:
 
 ```{r}
 summaries <- predictsr::GetSitelevelSummaries(extract = c(2016, 2022))
 str(summaries)
 ```
 
+Investigating the summary data closer we see that there are a number of missing columns between the two dataframes:
+
+```{r}
+print(names(predicts)[!(names(predicts) %in% names(summaries))])
+```
+
+This is because all of the measurement-level data has been dropped from the dataframe. Now indeed we could try and replicate the creation of the `summaries` dataframe through some {dplyr} operations. These would be the following (roughly):
+
+**Note:** I'm not sure on the summary statistics for this one, there seems to be some differences, and there are a couple sites that don't match up.
+
+```{r}
+summaries_rep <- predicts |>
+  dplyr::mutate(
+    Higher_taxa = paste(sort(unique(Higher_taxon)), collapse = ","),
+    N_samples = length(Measurement),
+    Rescaled_sampling_effort = mean(Rescaled_sampling_effort),
+    .by = SSBS
+  ) |>
+  dplyr::select(
+    dplyr::all_of(names(summaries))
+  ) |>
+  dplyr::distinct() |>
+  dplyr::arrange(SSBS)
+
+summaries_copy <- summaries |>
+  subset(SSBS %in% summaries_rep$SSBS) |>
+  dplyr::arrange(SSBS)
+
+all.equal(summaries_copy, summaries_rep)
+```
+
 ## Accessing descriptions of the columns in PREDICTS
 
-We have 67 (!) columns in the PREDICTS database, and within the NHM Data portal releases, we have included a description of the data that is used in each of these columns. You can access this via the `GetColumnDescriptions` function:
+As we've seen already, there are 67 (!) columns in the PREDICTS database, and within the NHM Data portal releases, we have included a description of the data that is used in each of these columns. You can access this via the `GetColumnDescriptions` function:
 
 ```{r}
 descriptions <- predictsr::GetColumnDescriptions()
 str(descriptions)
 ```
 
-### Database columns and notes
+So this includes the `Column` name, the resolution of the `Column` (`Applies_to`), whether it is in the PREDICTS extract (`Diversity_extract`), whether it is in the site-level summaries (`Site_extract`), the datatype of the `Column`*, whether it is guaranteed to be nonempty, any additional `Notes`, and any information on the range of values that the `Column` may be expected to take (`Validation`).
 
-The columns are described as follows:
+### Database notes
+
+To help understanding the database, we have pretty-printed some of the above column descriptions (namely the `Type` and `Note` for each column) as a formatted list:
 
 ```{r, echo = FALSE, results = 'asis'}
 for (i in seq_along(descriptions$Column)) {
   cat(
-    paste0("`", descriptions$Column[i], "` (`", descriptions$Type[i], "`)  \n")
+    paste0("* `", descriptions$Column[i], "` (`", descriptions$Type[i], "`): ")
   )
   notes <- descriptions$Notes[i] |>
-    (\(s) gsub("\\*", "-", s))() |>
+    (\(s) gsub("\\*", "  -", s))() |>
+    (\(s) gsub("\n\n", "  \n", s))() |>
     (\(s) gsub("\n", "  \n", s))()
 
   if (notes == " ") {
@@ -83,8 +117,24 @@ for (i in seq_along(descriptions$Column)) {
   }
 
   cat(notes)
-  cat("  \n  \n")
+  cat("  \n")
 }
 ```
 
+## Notes
 
+The [NHM Data Portal API](https://data.nhm.ac.uk/about/download) has no rate limits so be considerate with your requests. Make sure you save the data somewhere, or use a tool like [`targets`](https://docs.ropensci.org/targets/index.html) to save you from re-running workflows.
+
+## References
+
+Hudson, Lawrence N., et al. "The PREDICTS database: a global database of how local terrestrial biodiversity responds to human impacts." Ecology and evolution 4.24 (2014): 4701-4735. <https://doi.org/10.1002/ece3.1303>.
+
+Mittermeier, Russell A., et al. "Wilderness and biodiversity conservation." Proceedings of the National Academy of Sciences 100.18 (2003): 10309-10313. <https://doi.org/10.1073/pnas.1732458100>.
+
+Roskov Y., Kunze T., Paglinawan L., Orrell T., Nicolson D., Culham A., Bailly N., Kirk P., Bourgoin T., Baillargeon G., Hernandez F., De Wever A., eds (2013). Species 2000 & ITIS Catalogue of Life, 2013 Annual Checklist. Digital resource at <https://www.catalogueoflife.org/annual-checklist/2013/>. Species 2000: Reading, UK. 
+
+**Still need:**
+
+- Thematic Mapping 2008
+- The Nature Conservancy 2009
+- Conservation International Foundation 2011
