@@ -45,7 +45,7 @@ GetPredictsData <- function(extract = c(2016, 2022)) {
 #'   dataset.
 #' @returns The site-level summary data as a dataframe.
 #' @export
-GetSitelevelSummaries <- function(extract = 2016) {
+GetSitelevelSummaries <- function(extract = c(2016, 2022)) {
   if (!all(extract %in% c(2016, 2022)) || is.null(extract)) {
     stop("Incorrect 'extract' argument, should be 2016 and/or 2022")
   }

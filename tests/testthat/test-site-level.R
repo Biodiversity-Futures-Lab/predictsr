@@ -1,5 +1,5 @@
 CheckSitelevelData <- function(sls) {
-  expect_equal(nrow(sls), 26194)
+  expect_equal(nrow(sls), 35738)
   expect_equal(ncol(sls), 50)
 
   expected_names <- c(
@@ -24,18 +24,18 @@ CheckSitelevelData <- function(sls) {
   expect_equal(names(sls), expected_names)
 
   # source ID's are what is quoted on the website
-  expect_equal(length(unique(sls$Source_ID)), 480)
+  expect_equal(length(unique(sls$Source_ID)), 595)
 
   # check that the study counts are expected
-  expect_equal(length(unique(sls$SS)), 666)
+  expect_equal(length(unique(sls$SS)), 817)
   expect_equal(length(levels(sls$SS)), 993)
 
   # check that the sites are expected
-  expect_equal(length(unique(sls$SSBS)), 26194)
+  expect_equal(length(unique(sls$SSBS)), 35738)
   expect_equal(length(levels(sls$SSBS)), 53008)
 
   # we expect 94 countries from the webpage
-  expect_equal(length(unique(sls$Country)), 94)
+  expect_equal(length(unique(sls$Country)), 101)
 
   # some factor checks
   expect_setequal(
