@@ -21,3 +21,10 @@ locations in 94 countries and representing 47,089 species. The data were
 collected as part of the PREDICTS project - Projecting Responses of
 Ecological Diversity In Changing Terrestrial Systems.
 }
+\examples{
+\dontrun{
+  predicts <- GetPredictsData()
+  predicts_2016 <- GetPredictsData(extract = 2016)
+}
+
+}

@@ -11,6 +11,12 @@
 #'   dataset.
 #' @returns A dataframe containing the v1.1 PREDICTS database extract/s.
 #'
+#' @examples
+#' \dontrun{
+#'   predicts <- GetPredictsData()
+#'   predicts_2016 <- GetPredictsData(extract = 2016)
+#' }
+#'
 #' @export
 GetPredictsData <- function(extract = c(2016, 2022)) {
   # check that the extract is OK
@@ -44,6 +50,13 @@ GetPredictsData <- function(extract = c(2016, 2022)) {
 #'   download. Options are 2016 or 2022. Defaults to `c(2016, 2022)` - the whole
 #'   dataset.
 #' @returns The site-level summary data as a dataframe.
+#'
+#' @examples
+#' \dontrun{
+#'   summaries <- GetSitelevelSummaries()
+#'   summaries_2016 <- GetSitelevelSummaries(extract = 2016)
+#' }
+#'
 #' @export
 GetSitelevelSummaries <- function(extract = c(2016, 2022)) {
   if (!all(extract %in% c(2016, 2022)) || is.null(extract)) {
@@ -74,6 +87,12 @@ GetSitelevelSummaries <- function(extract = c(2016, 2022)) {
 #'
 #' @param ... extra arguments passed to read.csv.
 #' @returns The column descriptions in the format as a dataframe.
+#'
+#' @examples
+#' \dontrun{
+#'   descriptions <- GetColumnDescriptions()
+#' }
+#'
 #' @export
 GetColumnDescriptions <- function(...) {
   # HACK(connor): currently we only use the data from the year 2022 as this

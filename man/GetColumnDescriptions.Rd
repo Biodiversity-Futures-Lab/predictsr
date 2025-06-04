@@ -15,3 +15,9 @@ The column descriptions in the format as a dataframe.
 \description{
 Get a dataframe describing the columns in the PREDICTS database extract.
 }
+\examples{
+\dontrun{
+  descriptions <- GetColumnDescriptions()
+}
+
+}

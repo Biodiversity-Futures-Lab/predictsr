@@ -4,7 +4,7 @@
 \alias{GetSitelevelSummaries}
 \title{Get the site level summaries from the RDS file.}
 \usage{
-GetSitelevelSummaries(extract = 2016)
+GetSitelevelSummaries(extract = c(2016, 2022))
 }
 \arguments{
 \item{extract}{Numeric, year/s corresponding to PREDICTS database releases to
@@ -16,4 +16,11 @@ The site-level summary data as a dataframe.
 }
 \description{
 Get the site level summaries from the RDS file.
+}
+\examples{
+\dontrun{
+  summaries <- GetSitelevelSummaries()
+  summaries_2016 <- GetSitelevelSummaries(extract = 2016)
+}
+
 }

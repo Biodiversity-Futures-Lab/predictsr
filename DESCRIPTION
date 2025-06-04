@@ -1,6 +1,6 @@
 Package: predictsr
 Title: Access the PREDICTS database from the Natural History Museum, London
-Version: 0.0.1
+Version: 0.0.0.9000
 Authors@R:
     person("Connor", "Duffin", , "connor.duffin@nhm.ac.uk", role = c("aut", "cre"))
 Description: Fetches the PREDICTS database and relevant metadata from
