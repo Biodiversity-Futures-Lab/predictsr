@@ -10,7 +10,7 @@ Portal](https://data.nhm.ac.uk/dataset/the-2016-release-of-the-predicts-database
 
 The PREDICTS (Projecting Responses of Ecological Diversity In Changing Terrestrial Systems) dataset comprises 4,318,808 measurements, from 35,736 sampling locations in 101 countries and 47,089 species.
 
-The data were collated from spatial comparisons of local-scale biodiversity exposed to different intensities and types of anthropogenic pressures, from terrestrial sites around the world.
+The data were collated from spatial comparisons of local-scale biodiversity exposed to different intensities and types of anthropogenic pressures, from terrestrial sites around the world, and are described in Hudson et. al. (2013) <https://doi.org/10.1002/ece3.2579>.
 
 This package accesses the latest version of the open-access database as a dataframe. The available data is both the 2016 and 2022 releases of the database.
 
@@ -18,7 +18,13 @@ The package is very much in-development so there may be changes to the API as we
 
 ## Installation
 
-You can install the development version of predictsr from [GitHub](https://github.com/) with:
+Installation from CRAN proceeds as usual:
+
+```r
+install.packages("predictsr")
+```
+
+You can also install the development version of predictsr from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("pak")

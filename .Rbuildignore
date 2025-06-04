@@ -11,3 +11,4 @@
 ^scripts$
 ^doc$
 ^Meta$
+^cran-comments\.md$
