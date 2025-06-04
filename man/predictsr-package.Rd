@@ -4,12 +4,12 @@
 \name{predictsr-package}
 \alias{predictsr}
 \alias{predictsr-package}
-\title{predictsr: Access the PREDICTS Biodiversity Database in R}
+\title{predictsr: Access the PREDICTS Biodiversity Database}
 \description{
-Fetches the PREDICTS database and relevant metadata from the Data Portal at the Natural History Museum, London. Data were collated from over 400 existing spatial comparisons of local-scale biodiversity exposed to different intensities and types of anthropogenic pressures, from sites around the world. These data are licensed with a CC BY-NC 4.0 license, see also Hudson et. al. (2013) \url{https://doi.org/10.1002/ece3.2579} for full details.
+Fetches the PREDICTS database and relevant metadata from the Data Portal at the Natural History Museum, London. Data were collated from over 400 existing spatial comparisons of local-scale biodiversity exposed to different intensities and types of anthropogenic pressures, from sites around the world. These data are fully described in Hudson et. al. (2013) \doi{10.1002/ece3.2579}.
 }
 \author{
-\strong{Maintainer}: Connor Duffin \email{connor.duffin@nhm.ac.uk}
+\strong{Maintainer}: Connor Duffin \email{connor.duffin@nhm.ac.uk} [copyright holder]
 
 }
 \keyword{internal}

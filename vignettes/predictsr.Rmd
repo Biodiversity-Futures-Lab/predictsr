@@ -127,9 +127,9 @@ The [NHM Data Portal API](https://data.nhm.ac.uk/about/download) has no rate lim
 
 ## References
 
-Hudson, Lawrence N., et al. "The PREDICTS database: a global database of how local terrestrial biodiversity responds to human impacts." Ecology and evolution 4.24 (2014): 4701-4735. <https://doi.org/10.1002/ece3.1303>.
+Hudson, Lawrence N., et al. "The PREDICTS database: a global database of how local terrestrial biodiversity responds to human impacts." Ecology and evolution 4.24 (2014): 4701-4735. <doi:10.1002/ece3.1303>.
 
-Mittermeier, Russell A., et al. "Wilderness and biodiversity conservation." Proceedings of the National Academy of Sciences 100.18 (2003): 10309-10313. <https://doi.org/10.1073/pnas.1732458100>.
+Mittermeier, Russell A., et al. "Wilderness and biodiversity conservation." Proceedings of the National Academy of Sciences 100.18 (2003): 10309-10313. <doi:10.1073/pnas.1732458100>.
 
 Roskov Y., Kunze T., Paglinawan L., Orrell T., Nicolson D., Culham A., Bailly N., Kirk P., Bourgoin T., Baillargeon G., Hernandez F., De Wever A., eds (2013). Species 2000 & ITIS Catalogue of Life, 2013 Annual Checklist. Digital resource at <https://www.catalogueoflife.org/annual-checklist/2013/>. Species 2000: Reading, UK. 
 
