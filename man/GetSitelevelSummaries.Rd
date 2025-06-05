@@ -2,7 +2,7 @@
 % Please edit documentation in R/predictsr.R
 \name{GetSitelevelSummaries}
 \alias{GetSitelevelSummaries}
-\title{Get the site level summaries from the RDS file.}
+\title{Get the PREDICTS database site level summaries.}
 \usage{
 GetSitelevelSummaries(extract = c(2016, 2022))
 }
@@ -15,7 +15,10 @@ dataset.}
 The site-level summary data as a dataframe.
 }
 \description{
-Get the site level summaries from the RDS file.
+This acesses summary data for the relevant PREDICTS database extract. There
+are two releases of the PREDICTS database, an initial release in 2016, and an
+additional release in 2022. The user chooses whether to pull summary data for
+the 2016 and/or 2022 release.
 }
 \examples{
 \dontrun{

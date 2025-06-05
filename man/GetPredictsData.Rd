@@ -15,11 +15,11 @@ dataset.}
 A dataframe containing the v1.1 PREDICTS database extract/s.
 }
 \description{
-This returns the complete PREDICTS database extract from the latest release
-(v1.1, 2016). It comprises of 3,278,056 measurements, from 26,194 sampling
-locations in 94 countries and representing 47,089 species. The data were
-collected as part of the PREDICTS project - Projecting Responses of
-Ecological Diversity In Changing Terrestrial Systems.
+This returns the complete PREDICTS database extract from the latest
+release/s. The data were collected as part of the PREDICTS project -
+Projecting Responses of Ecological Diversity In Changing Terrestrial Systems,
+and comprise of two releases. The first was in 2016, and the second in 2022.
+This function accesses the 2016 and/or 2022 release.
 }
 \examples{
 \dontrun{

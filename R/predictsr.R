@@ -1,10 +1,10 @@
 #' Read the PREDICTS database into either a dataframe.
 #'
-#' This returns the complete PREDICTS database extract from the latest release
-#' (v1.1, 2016). It comprises of 3,278,056 measurements, from 26,194 sampling
-#' locations in 94 countries and representing 47,089 species. The data were
-#' collected as part of the PREDICTS project - Projecting Responses of
-#' Ecological Diversity In Changing Terrestrial Systems.
+#' This returns the complete PREDICTS database extract from the latest
+#' release/s. The data were collected as part of the PREDICTS project -
+#' Projecting Responses of Ecological Diversity In Changing Terrestrial Systems,
+#' and comprise of two releases. The first was in 2016, and the second in 2022.
+#' This function accesses the 2016 and/or 2022 release.
 #'
 #' @param extract numeric, year/s corresponding to PREDICTS database releases to
 #'   download. Options are 2016 or 2022. Defaults to `c(2016, 2022)` - the whole
@@ -44,7 +44,12 @@ GetPredictsData <- function(extract = c(2016, 2022)) {
   return(predicts)
 }
 
-#' Get the site level summaries from the RDS file.
+#' Get the PREDICTS database site level summaries.
+#'
+#' This acesses summary data for the relevant PREDICTS database extract. There
+#' are two releases of the PREDICTS database, an initial release in 2016, and an
+#' additional release in 2022. The user chooses whether to pull summary data for
+#' the 2016 and/or 2022 release.
 #'
 #' @param extract Numeric, year/s corresponding to PREDICTS database releases to
 #'   download. Options are 2016 or 2022. Defaults to `c(2016, 2022)` - the whole
@@ -140,7 +145,7 @@ GetColumnDescriptions <- function(...) {
   return(output)
 }
 
-#' Request data from the NHM data portal
+#' Request data from the NHM data portal.
 #'
 #' @param request_body_json A named list giving the body of the request.
 #' @param timeout Integer giving the time (in seconds) to wait for the request.
@@ -151,6 +156,8 @@ GetColumnDescriptions <- function(...) {
 #'   not. If it was, data can be downloaded from the `status_json$urls$direct`
 #'   entry.
 #' @import httr2
+#'
+#' @noRd
 .RequestDataPortal <- function(request_body_json, timeout = 600) {
   if (!is.list(request_body_json)) {
     stop("Request_body_json should be a list (use e.g. jsonlite::fromJSON)")
@@ -214,6 +221,8 @@ GetColumnDescriptions <- function(...) {
 #' @return A dataframe assembled from one or more RDS files returned
 #'   by the API.
 #' @import httr2
+#'
+#' @noRd
 .RequestRDSDataFrame <- function(status_json) {
   if (status_json$status != "complete") {
     stop(
