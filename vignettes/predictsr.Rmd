@@ -12,7 +12,7 @@ knitr:
 cache: true
 ---
 
-The [`predictsr`](https://github.com/Biodiversity-Futures-Lab/predictsr) package accesses the PREDICTS database from within R, conveniently as a dataframe. It uses the [Natural History Museum Data Portal](https://data.nhm.ac.uk/) to download the latest versions of the PREDICTS database and some related metadata. 
+The [`predictsr`](https://github.com/Biodiversity-Futures-Lab/predictsr) package accesses the PREDICTS database (Hudson et al, 2013) from within R, conveniently as a dataframe. It uses the [Natural History Museum Data Portal](https://data.nhm.ac.uk/) to download the latest versions of the PREDICTS database and some related metadata. 
 
 The [PREDICTS](https://www.nhm.ac.uk/our-science/research/projects/predicts/science.html) database comprises over 4 million measurements of species at sites across the world. The data are mostly collected from arthropods (mainly insects), and we cover about 2% of the species known by science. All major terrestrial plant, animal, and fungal groups are covered. There have been 2 public releases of PREDICTS data. The first was in [2016](https://data.nhm.ac.uk/dataset/the-2016-release-of-the-predicts-database-v1-1) and the second was in [2022](https://data.nhm.ac.uk/dataset/release-of-data-added-to-the-predicts-database-november-2022); each consisted of about 3 million and 1 million records, respectively. We include both, as a single dataset, in this package.
 
@@ -98,43 +98,10 @@ str(descriptions)
 
 So this includes the `Column` name, the resolution of the `Column` (`Applies_to`), whether it is in the PREDICTS extract (`Diversity_extract`), whether it is in the site-level summaries (`Site_extract`), the datatype of the `Column`*, whether it is guaranteed to be nonempty, any additional `Notes`, and any information on the range of values that the `Column` may be expected to take (`Validation`).
 
-### Database notes
-
-To help understanding the database, we have pretty-printed some of the above column descriptions (namely the `Type` and `Note` for each column) as a formatted list:
-
-```{r, echo = FALSE, results = 'asis'}
-for (i in seq_along(descriptions$Column)) {
-  cat(
-    paste0("* `", descriptions$Column[i], "` (`", descriptions$Type[i], "`): ")
-  )
-  notes <- descriptions$Notes[i] |>
-    (\(s) gsub("\\*", "  -", s))() |>
-    (\(s) gsub("\n\n", "  \n", s))() |>
-    (\(s) gsub("\n", "  \n", s))()
-
-  if (notes == " ") {
-    notes <- "As title."
-  }
-
-  cat(notes)
-  cat("  \n")
-}
-```
-
 ## Notes
 
 The [NHM Data Portal API](https://data.nhm.ac.uk/about/download) has no rate limits so be considerate with your requests. Make sure you save the data somewhere, or use a tool like [`targets`](https://docs.ropensci.org/targets/index.html) to save you from re-running workflows.
 
 ## References
 
-Hudson, Lawrence N., et al. "The PREDICTS database: a global database of how local terrestrial biodiversity responds to human impacts." Ecology and evolution 4.24 (2014): 4701-4735. <doi:10.1002/ece3.1303>.
-
-Mittermeier, Russell A., et al. "Wilderness and biodiversity conservation." Proceedings of the National Academy of Sciences 100.18 (2003): 10309-10313. <doi:10.1073/pnas.1732458100>.
-
-Roskov Y., Kunze T., Paglinawan L., Orrell T., Nicolson D., Culham A., Bailly N., Kirk P., Bourgoin T., Baillargeon G., Hernandez F., De Wever A., eds (2013). Species 2000 & ITIS Catalogue of Life, 2013 Annual Checklist. Digital resource at <https://www.catalogueoflife.org/annual-checklist/2013/>. Species 2000: Reading, UK. 
-
-**Still need:**
-
-- Thematic Mapping 2008
-- The Nature Conservancy 2009
-- Conservation International Foundation 2011
+Hudson, Lawrence N., et al. "The PREDICTS database: a global database of how local terrestrial biodiversity responds to human impacts." Ecology and evolution 4.24 (2014): 4701-4735. <doi.org/10.1002/ece3.1303>.
