@@ -13,3 +13,6 @@
 ^Meta$
 ^cran-comments\.md$
 ^README\.Rmd$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

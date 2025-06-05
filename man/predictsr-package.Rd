@@ -8,6 +8,13 @@
 \description{
 Fetches the PREDICTS database and relevant metadata from the Data Portal at the Natural History Museum, London. Data were collated from over 400 existing spatial comparisons of local-scale biodiversity exposed to different intensities and types of anthropogenic pressures, from sites around the world. These data are fully described in Hudson et. al. (2013) \doi{10.1002/ece3.2579}.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://biodiversity-futures-lab.github.io/predictsr/}
+}
+
+}
 \author{
 \strong{Maintainer}: Connor Duffin \email{connor.duffin@nhm.ac.uk} [copyright holder]
 

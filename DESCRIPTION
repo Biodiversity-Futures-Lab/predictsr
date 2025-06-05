@@ -28,3 +28,4 @@ Depends:
     R (>= 3.5)
 Config/testthat/parallel: true
 VignetteBuilder: knitr
+URL: https://biodiversity-futures-lab.github.io/predictsr/
