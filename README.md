@@ -10,7 +10,7 @@ Portal](https://data.nhm.ac.uk/).
 
 The PREDICTS (Projecting Responses of Ecological Diversity In Changing
 Terrestrial Systems) dataset comprises 4,318,808 measurements, from
-35,736 sampling locations in 101 countries and 47,089 species, taken
+35,736 sampling locations in 101 countries and 54,863 species, taken
 across two releases: one in
 [2016](https://data.nhm.ac.uk/dataset/the-2016-release-of-the-predicts-database-v1-1)
 and another in
@@ -19,7 +19,7 @@ and another in
 The data were collated from spatial comparisons of local-scale
 biodiversity exposed to different intensities and types of anthropogenic
 pressures, from terrestrial sites around the world, and are described in
-Hudson et. al. (2013) (<doi:10.1002/ece3.2579>).
+Hudson et. al. (2016) (<doi:10.1002/ece3.2579>).
 
 This package accesses the latest version of the open-access database as
 a dataframe, and is under active development.
