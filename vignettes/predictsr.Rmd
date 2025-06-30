@@ -52,8 +52,6 @@ print(glue::glue(
 ))
 ```
 
-**NOTE:** maybe a plot here to demonstrate the different taxonomic coverage? But I'm not sure how to relicate what is out there...
-
 ## Accessing site-level summaries
 
 We also include access to the site-level summaries from the full release; to get *these data* you will need to use the `GetSitelevelSummaries` function. The function call is very similar to pull in the summaries for the same data as above:
@@ -105,6 +103,40 @@ str(descriptions)
 
 So this includes the `Column` name, the resolution of the `Column` (`Applies_to`), whether it is in the PREDICTS extract (`Diversity_extract`), whether it is in the site-level summaries (`Site_extract`), the datatype of the `Column`*, whether it is guaranteed to be nonempty, any additional `Notes`, and any information on the range of values that the `Column` may be expected to take (`Validation`).
 
+## Glossary
+
+To clarify some of the PREDICTS jargon, we include the following table of definitions, from the dataframes we have worked with thus far:
+
+```{r, echo = FALSE, results = 'asis'}
+descriptions_sub <-  subset(
+  descriptions,
+  Column %in% c(
+    "Source_ID", "SS", "Block", "SSBS", "Diversity_metric_type", "Measurement"
+  )
+)
+
+for (i in seq_along(descriptions_sub$Column)) {
+  cat(
+    paste0(
+      "* `", descriptions_sub$Column[i], "` (`", descriptions_sub$Type[i], "`): "
+    )
+  )
+  notes <- descriptions_sub$Notes[i] |>
+    (\(s) gsub("\\*", "  -", s))() |>
+    (\(s) gsub("\n\n", "  \n", s))() |>
+    (\(s) gsub("\n", "  \n", s))()
+
+  if (notes == " ") {
+    notes <- "As title."
+  }
+
+  cat(notes)
+  cat("  \n")
+}
+```
+
+**Notes:** When we refer to a "study" we typically refer to it from the `SS` that identifies it. Referring to an "extract" simply refers to a PREDICTS database release, either from 2016 or 2022 (or both). For further complete documentation see the SI in Hudson et. al. (2017).
+
 ## Notes
 
 The [NHM Data Portal API](https://data.nhm.ac.uk/about/download) has no rate limits so be considerate with your requests. Make sure you save the data somewhere, or use a tool like [`targets`](https://docs.ropensci.org/targets/index.html) to save you from re-running workflows.
@@ -112,3 +144,5 @@ The [NHM Data Portal API](https://data.nhm.ac.uk/about/download) has no rate lim
 ## References
 
 Hudson, Lawrence N., et al. "The PREDICTS database: a global database of how local terrestrial biodiversity responds to human impacts." Ecology and evolution 4.24 (2014): 4701-4735. <doi.org/10.1002/ece3.1303>.
+
+Hudson, Lawrence N., et al. "The database of the PREDICTS (projecting responses of ecological diversity in changing terrestrial systems) project." Ecology and evolution 7.1 (2017): 145-188 <doi.org/10.1002/ece3.2579>
