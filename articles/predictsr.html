@@ -183,9 +183,6 @@ sites in the database.</p>
 <span>  <span class="st">"latest sample collection (midpoint): {max(predicts$Sample_midpoint)}"</span></span>
 <span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Earliest sample collection (midpoint): 1984-04-22, latest sample collection (midpoint): 2018-05-01</span></span></code></pre>
-<p><strong>NOTE:</strong> maybe a plot here to demonstrate the different
-taxonomic coverage? But I’m not sure how to relicate what is out
-there…</p>
 <div class="section level2">
 <h2 id="accessing-site-level-summaries">Accessing site-level summaries<a class="anchor" aria-label="anchor" href="#accessing-site-level-summaries"></a>
 </h2>
@@ -331,6 +328,57 @@ values that the <code>Column</code> may be expected to take
 (<code>Validation</code>).</p>
 </div>
 <div class="section level2">
+<h2 id="glossary">Glossary<a class="anchor" aria-label="anchor" href="#glossary"></a>
+</h2>
+<p>To clarify some of the PREDICTS jargon, we include the following
+table of definitions, from the dataframes we have worked with thus
+far:</p>
+<ul>
+<li>
+<code>Source_ID</code> (<code>String</code>): ID for the Data
+Source.<br>
+</li>
+<li>
+<code>SS</code> (<code>String</code>): Concatenation of Source_ID
+and Study_number.<br>
+</li>
+<li>
+<code>Diversity_metric_type</code> (<code>String</code>): One of:
+<ul>
+<li>Abundance<br>
+</li>
+<li>Occurrence<br>
+</li>
+<li>Species richness<br>
+</li>
+</ul>
+</li>
+<li>
+<code>Block</code> (<code>Integer</code>): Within a Study either:
+<ul>
+<li>Empty for all Sites<br>
+</li>
+<li>Non-empty for all Sites and at least two different values among
+Sites<br>
+</li>
+</ul>
+</li>
+<li>
+<code>SSBS</code> (<code>String</code>): Concatenation of Source_ID,
+Study_number, Block and Site_number.<br>
+</li>
+<li>
+<code>Measurement</code> (<code>Number</code>): The biodiversity
+measurement of the Taxon at the Site in the Study, in units of
+Diversity_metric_unit.</li>
+</ul>
+<p><strong>Notes:</strong> When we refer to a “study” we typically refer
+to it from the <code>SS</code> that identifies it. Referring to an
+“extract” simply refers to a PREDICTS database release, either from 2016
+or 2022 (or both). For further complete documentation see the SI in
+Hudson et. al. (2017).</p>
+</div>
+<div class="section level2">
 <h2 id="notes">Notes<a class="anchor" aria-label="anchor" href="#notes"></a>
 </h2>
 <p>The <a href="https://data.nhm.ac.uk/about/download" class="external-link">NHM Data Portal
@@ -345,6 +393,10 @@ to save you from re-running workflows.</p>
 of how local terrestrial biodiversity responds to human impacts.”
 Ecology and evolution 4.24 (2014): 4701-4735.
 &lt;doi.org/10.1002/ece3.1303&gt;.</p>
+<p>Hudson, Lawrence N., et al. “The database of the PREDICTS (projecting
+responses of ecological diversity in changing terrestrial systems)
+project.” Ecology and evolution 7.1 (2017): 145-188
+&lt;doi.org/10.1002/ece3.2579&gt;</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
