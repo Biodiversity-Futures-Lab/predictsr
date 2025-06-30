@@ -63,18 +63,20 @@
 <p>You can also install the development version of predictsr from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># install.packages("pak")</span></span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>pak<span class="sc">::</span><span class="fu">pak</span>(<span class="st">"Biodiversity-Futures-Lab/predictsr"</span>)</span></code></pre></div>
+<p>Then as usual just load the package:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">library</span>(predictsr)</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
 <p>To pull in the database and get the data, use the <code>GetPredictsData</code> function:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>predicts <span class="ot">&lt;-</span> <span class="fu">GetPredictsData</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>predicts <span class="ot">&lt;-</span> <span class="fu">GetPredictsData</span>()</span></code></pre></div>
 <p>which by default will read in the 2016 and 2022 data, as a dataframe.</p>
 <p>To read in the site-level summaries:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>summaries <span class="ot">&lt;-</span> <span class="fu">GetSitelevelSummaries</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>summaries <span class="ot">&lt;-</span> <span class="fu">GetSitelevelSummaries</span>()</span></code></pre></div>
 <p>which will also, by default, read in the 2016 and 2022 data, as a dataframe.</p>
 <p>To read in the descriptions of the columns of the database extract:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>columns <span class="ot">&lt;-</span> <span class="fu">GetColumnDescriptions</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>columns <span class="ot">&lt;-</span> <span class="fu">GetColumnDescriptions</span>()</span></code></pre></div>
 <p>which will give you a dataframe on the information on the columns that are in the database extract.</p>
 </div>
 <div class="section level2">
