@@ -153,13 +153,20 @@ fetch. It reads in both extracts into a single dataframe:</p>
 PREDICTS extracts. Let’s look at a set of summary statistics for the
 database:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">glue</span><span class="fu">::</span><span class="fu"><a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">taxa</span> <span class="op">&lt;-</span> <span class="va">predicts</span><span class="op">[</span></span>
+<span>  <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/duplicated.html" class="external-link">duplicated</a></span><span class="op">(</span><span class="va">predicts</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Source_ID"</span>, <span class="st">"Study_name"</span>, <span class="st">"Taxon_name_entered"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>,</span>
+<span><span class="op">]</span></span>
+<span><span class="va">species_counts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">taxa</span><span class="op">[</span><span class="va">taxa</span><span class="op">$</span><span class="va">Rank</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Species"</span>, <span class="st">"Infraspecies"</span><span class="op">)</span>, <span class="st">"Taxon"</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="op">)</span> <span class="op">+</span>  <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">taxa</span><span class="op">[</span><span class="op">!</span><span class="va">taxa</span><span class="op">$</span><span class="va">Rank</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Species"</span>, <span class="st">"Infraspecies"</span><span class="op">)</span>, <span class="op">]</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">glue</span><span class="fu">::</span><span class="fu"><a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue</a></span><span class="op">(</span></span>
 <span>  <span class="st">"This database has {length(unique(predicts$SS))} studies across "</span>,</span>
 <span>  <span class="st">"{length(unique(predicts$SSBS))} sites, in "</span>,</span>
 <span>  <span class="st">"{length(unique(predicts$Country))} countries, and with "</span>,</span>
-<span>  <span class="st">"{length(unique(predicts$Species))} species."</span></span>
+<span>  <span class="st">"{species_counts} species."</span></span>
 <span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## This database has 817 studies across 35736 sites, in 101 countries, and with 12892 species.</span></span></code></pre>
+<pre><code><span><span class="co">## This database has 817 studies across 35736 sites, in 101 countries, and with 54863 species.</span></span></code></pre>
 <p>So over 30,000 sites, 101 countries, and 12,892 species in this
 dataframe! There are a couple of important columns that should be noted.
 The <code>SS</code> column is what we use to identify studies when
