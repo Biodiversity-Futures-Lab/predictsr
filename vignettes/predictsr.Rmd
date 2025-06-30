@@ -26,11 +26,18 @@ str(predicts)
 So we can see that there are over 4 million records in the combined PREDICTS extracts. Let's look at a set of summary statistics for the database:
 
 ```{r}
+taxa <- predicts[
+  !duplicated(predicts[, c("Source_ID", "Study_name", "Taxon_name_entered")]),
+]
+species_counts <- length(
+  unique(taxa[taxa$Rank %in% c("Species", "Infraspecies"), "Taxon"])
+) +  nrow(taxa[!taxa$Rank %in% c("Species", "Infraspecies"), ])
+
 print(glue::glue(
   "This database has {length(unique(predicts$SS))} studies across ",
   "{length(unique(predicts$SSBS))} sites, in ",
   "{length(unique(predicts$Country))} countries, and with ",
-  "{length(unique(predicts$Species))} species."
+  "{species_counts} species."
 ))
 ```
 
