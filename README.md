@@ -35,6 +35,10 @@ You can also install the development version of predictsr from
     # install.packages("pak")
     pak::pak("Biodiversity-Futures-Lab/predictsr")
 
+Then as usual just load the package:
+
+    library(predictsr)
+
 ## Usage
 
 To pull in the database and get the data, use the `GetPredictsData`
