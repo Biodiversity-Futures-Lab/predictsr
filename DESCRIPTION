@@ -1,6 +1,6 @@
 Package: predictsr
 Title: Access the PREDICTS Biodiversity Database
-Version: 0.0.1
+Version: 0.1.0
 Authors@R:
     person("Connor", "Duffin", , "connor.duffin@nhm.ac.uk", role = c("aut", "cre", "cph"))
 Description: Fetches the PREDICTS database and relevant metadata from
