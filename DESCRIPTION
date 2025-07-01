@@ -2,7 +2,7 @@ Package: predictsr
 Title: Access the PREDICTS Biodiversity Database
 Version: 0.1.0
 Authors@R:
-    person("Connor", "Duffin", , "connor.duffin@nhm.ac.uk", role = c("aut", "cre", "cph"))
+    person("Connor", "Duffin", , "connor.p.duffin@gmail.com", role = c("aut", "cre", "cph"))
 Description: Fetches the PREDICTS database and relevant metadata from
     the Data Portal at the Natural History Museum, London. Data were collated
     from over 400 existing spatial comparisons of local-scale biodiversity
