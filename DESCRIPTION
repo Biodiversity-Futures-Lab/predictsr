@@ -7,8 +7,8 @@ Description: Fetches the PREDICTS database and relevant metadata from
     the Data Portal at the Natural History Museum, London. Data were collated
     from over 400 existing spatial comparisons of local-scale biodiversity
     exposed to different intensities and types of anthropogenic pressures, from
-    sites around the world. These data are fully described in Hudson et. al.
-    (2013) <doi:10.1002/ece3.2579>.
+    sites around the world. These data are described in Hudson et al. (2013)
+    <doi:10.1002/ece3.2579>.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -25,7 +25,7 @@ Suggests:
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Depends:
-    R (>= 3.5)
+    R (>= 4.1.0)
 Config/testthat/parallel: true
 VignetteBuilder: knitr
 URL: https://biodiversity-futures-lab.github.io/predictsr/
