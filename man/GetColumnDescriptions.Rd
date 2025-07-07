@@ -16,7 +16,7 @@ The column descriptions in the format as a dataframe.
 Get a dataframe describing the columns in the PREDICTS database extract.
 }
 \examples{
-\dontrun{
+\donttest{
   descriptions <- GetColumnDescriptions()
 }
 

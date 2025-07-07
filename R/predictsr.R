@@ -12,7 +12,7 @@
 #' @returns A dataframe containing the v1.1 PREDICTS database extract/s.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'   predicts <- GetPredictsData()
 #'   predicts_2016 <- GetPredictsData(extract = 2016)
 #' }
@@ -57,7 +57,7 @@ GetPredictsData <- function(extract = c(2016, 2022)) {
 #' @returns The site-level summary data as a dataframe.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'   summaries <- GetSitelevelSummaries()
 #'   summaries_2016 <- GetSitelevelSummaries(extract = 2016)
 #' }
@@ -94,7 +94,7 @@ GetSitelevelSummaries <- function(extract = c(2016, 2022)) {
 #' @returns The column descriptions in the format as a dataframe.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #'   descriptions <- GetColumnDescriptions()
 #' }
 #'

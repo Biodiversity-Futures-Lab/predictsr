@@ -21,7 +21,7 @@ additional release in 2022. The user chooses whether to pull summary data for
 the 2016 and/or 2022 release.
 }
 \examples{
-\dontrun{
+\donttest{
   summaries <- GetSitelevelSummaries()
   summaries_2016 <- GetSitelevelSummaries(extract = 2016)
 }

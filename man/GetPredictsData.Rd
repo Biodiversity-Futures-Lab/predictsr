@@ -22,7 +22,7 @@ and comprise of two releases. The first was in 2016, and the second in 2022.
 This function accesses the 2016 and/or 2022 release.
 }
 \examples{
-\dontrun{
+\donttest{
   predicts <- GetPredictsData()
   predicts_2016 <- GetPredictsData(extract = 2016)
 }
