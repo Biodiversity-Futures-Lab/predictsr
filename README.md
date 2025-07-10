@@ -1,7 +1,12 @@
 
 # predictsr
 
+<!-- badges: start -->
+
+[![CRAN
+status](https://www.r-pkg.org/badges/version/predictsr)](https://cran.r-project.org/package=predictsr)
 [![R-CMD-check](https://github.com/Biodiversity-Futures-Lab/predictsr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Biodiversity-Futures-Lab/predictsr/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
 
 predictsr fetches the latest version of the open-access
 [PREDICTS](https://www.nhm.ac.uk/our-science/research/projects/predicts.html)
