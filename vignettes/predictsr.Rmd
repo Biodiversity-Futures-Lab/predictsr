@@ -28,6 +28,8 @@ predicts <- predictsr::GetPredictsData(extract = c(2016, 2022))
 str(predicts)
 ```
 
+Be patient as this may take a few seconds to run, as it downloads the data from the NHM Data Portal.
+
 So we can see that there are over 4 million records in the combined PREDICTS extracts. Let's look at a set of summary statistics for the database:
 
 ```{r}
