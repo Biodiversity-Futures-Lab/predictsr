@@ -14,7 +14,12 @@ cache: true
 
 The [`predictsr`](https://github.com/Biodiversity-Futures-Lab/predictsr) package accesses the PREDICTS database (Hudson et al, 2013) from within R, conveniently as a dataframe. It uses the [Natural History Museum Data Portal](https://data.nhm.ac.uk/) to download the latest versions of the PREDICTS database and some related metadata. 
 
-The [PREDICTS](https://www.nhm.ac.uk/our-science/research/projects/predicts/science.html) database comprises over 4 million measurements of species at sites across the world. The data are mostly collected from arthropods (mainly insects), and we cover about 2% of the species known by science. All major terrestrial plant, animal, and fungal groups are covered. There have been 2 public releases of PREDICTS data. The first was in [2016](https://data.nhm.ac.uk/dataset/the-2016-release-of-the-predicts-database-v1-1) and the second was in [2022](https://data.nhm.ac.uk/dataset/release-of-data-added-to-the-predicts-database-november-2022); each consisted of about 3 million and 1 million records, respectively. We include both, as a single dataset, in this package.
+The [PREDICTS](https://www.nhm.ac.uk/our-science/research/projects/predicts/science.html) database comprises over 4 million measurements of species at sites across the world.
+All major terrestrial plant, animal, and fungal groups are represented within the data. The most well-represented group in the data are arthropods (mainly insects), covering about 2% of the species known by science
+
+There have been 2 public releases of PREDICTS data. The first was in [2016](https://data.nhm.ac.uk/dataset/the-2016-release-of-the-predicts-database-v1-1) and the second was in [2022](https://data.nhm.ac.uk/dataset/release-of-data-added-to-the-predicts-database-november-2022); each consisted of about 3 million and 1 million records, respectively. We include both, as a single dataset, in this package.
+
+*However*, the PREDICTS database is under constant development and is continuously growing, with later releases planned.
 
 To get started, let's load in the database into R and poke around. To do so you will use the `GetPredictsData` function, which pulls in the data from the data portal. I'll repeat the default option below, but you can take either 2016, 2022, or both as the extracts to fetch. It reads in both extracts into a single dataframe:
 
