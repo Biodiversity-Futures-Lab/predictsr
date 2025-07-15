@@ -16,7 +16,12 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Connor Duffin \email{connor.p.duffin@gmail.com} [copyright holder]
+\strong{Maintainer}: Connor Duffin \email{connor.p.duffin@gmail.com}
+
+Other contributors:
+\itemize{
+  \item The Trustees of The Natural History Museum, London [copyright holder]
+}
 
 }
 \keyword{internal}
