@@ -79,6 +79,16 @@ data.
 This package builds upon the [NHM data portal
 API](https://data.nhm.ac.uk/about/download), which by default has no API
 rate limits. Please respect this and be responsible with your access.
-See also the [terms and
-conditions](https://data.nhm.ac.uk/terms-conditions) on the use of the
-Data Portal.
+
+## Copyright
+
+This data is provided subject to terms on the [Natural History Museum
+Data Portal](https://data.nhm.ac.uk/terms-conditions). The 2016 release
+is licensed under a [CC BY-NC
+4.0](https://creativecommons.org/licenses/by-nc/4.0/) license, and the
+2022 release is licensed under a [CC
+NC](https://creativecommons.org/licenses/by-nc/4.0/) license.
+
+Note that this stipulates that **you may not** use the data for
+commercial purposes, and that you must provide *attribution* to the
+original source of the data.

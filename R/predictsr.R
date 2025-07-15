@@ -1,10 +1,24 @@
 #' Read the PREDICTS database into either a dataframe.
 #'
-#' This returns the complete PREDICTS database extract from the latest
-#' release/s. The data were collected as part of the PREDICTS project -
-#' Projecting Responses of Ecological Diversity In Changing Terrestrial Systems,
-#' and comprise of two releases. The first was in 2016, and the second in 2022.
-#' This function accesses the 2016 and/or 2022 release.
+#' @description
+#' This returns the latest complete PREDICTS database extract as a dataframe.
+#'
+#' @details
+#' The data were collected as part of the PREDICTS project - Projecting
+#'   Responses of Ecological Diversity In Changing Terrestrial Systems, and
+#'   comprise of two releases. The first was in 2016, and the second in 2022.
+#'   This function accesses the 2016 and/or 2022 release.
+#'
+#' The database is provided as a dataframe, with each row corresponding to a
+#'   site-level observation, and each column corresponding to a variable
+#'   describing the site or the observation. The data are provided in a
+#'   standardised format, with column names that are consistent across the
+#'   database.
+#'
+#' The data are provided under a CC NC (non-commercial) license, which means
+#'   that they cannot be used for commercial purposes. The 2016 release is
+#'   available under a CC BY-NC-SA 4.0 license, and the 2022 release is available
+#'   under a CC NC (any) license.
 #'
 #' @param extract numeric, year/s corresponding to PREDICTS database releases to
 #'   download. Options are 2016 or 2022. Defaults to `c(2016, 2022)` - the whole
@@ -46,10 +60,28 @@ GetPredictsData <- function(extract = c(2016, 2022)) {
 
 #' Get the PREDICTS database site level summaries.
 #'
-#' This acesses summary data for the relevant PREDICTS database extract. There
-#' are two releases of the PREDICTS database, an initial release in 2016, and an
-#' additional release in 2022. The user chooses whether to pull summary data for
-#' the 2016 and/or 2022 release.
+#' @description
+#' This acesses summary data for the relevant PREDICTS database extract.
+#'
+#' @details
+#' The PREDICTS database contains site-level summaries of the data collected
+#'   as part of the PREDICTS project - Projecting Responses of Ecological
+#'   Diversity In Changing Terrestrial Systems.
+#'
+#' The site-level summaries are provided as a dataframe, with each row
+#'   corresponding to a site-level observation, and each column corresponding to
+#'   a variable describing the site or the observation. The data are provided in
+#'   a standardised format, with column names that are consistent across the
+#'   database.
+#'
+#' There are two releases of the PREDICTS database, an initial release in 2016,
+#'   and an additional release in 2022. The user chooses whether to pull summary
+#'   data for the 2016 and/or 2022 release.
+#'
+#' The data are provided under a CC NC (non-commercial) license, which means
+#'   that they cannot be used for commercial purposes. The 2016 release is
+#'   available under a CC BY-NC-SA 4.0 license, and the 2022 release is available
+#'   under a CC NC (any) license.
 #'
 #' @param extract Numeric, year/s corresponding to PREDICTS database releases to
 #'   download. Options are 2016 or 2022. Defaults to `c(2016, 2022)` - the whole
@@ -89,6 +121,29 @@ GetSitelevelSummaries <- function(extract = c(2016, 2022)) {
 }
 
 #' Get a dataframe describing the columns in the PREDICTS database extract.
+#'
+#' @description
+#' This function returns a dataframe containing the column descriptions for
+#'   the PREDICTS database extract.
+#'
+#' @details
+#' The PREDICTS - Predicting Responses of Ecological Diversity In Changing
+#'   Terrestrial Systems - database contains a large number of columns, each
+#'   corresponding to a variable describing the site or the observation. This
+#'   function accesses the column descriptions for the PREDICTS database
+#'   extract.
+#'
+#' The column descriptions are provided as a dataframe, with each row
+#'   corresponding to a column in the PREDICTS database extract.
+#'
+#' There are two releases of the PREDICTS database, an initial release in 2016,
+#'   and an additional release in 2022. The user chooses whether to pull summary
+#'   data for the 2016 and/or 2022 release.
+#'
+#' The data are provided under a CC NC (non-commercial) license, which means
+#'   that they cannot be used for commercial purposes. The 2016 release is
+#'   available under a CC BY-NC-SA 4.0 license, and the 2022 release is available
+#'   under a CC NC (any) license.
 #'
 #' @param ... extra arguments passed to read.csv.
 #' @returns The column descriptions in the format as a dataframe.
