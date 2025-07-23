@@ -268,7 +268,7 @@ GetColumnDescriptions <- function(...) {
   }
 }
 
-#' Monitor the download status reponse from the NHM data portal.
+#' Monitor the download status response from the NHM data portal.
 #'
 #' @description
 #' This function checks the status of a download request made to the NHM data
