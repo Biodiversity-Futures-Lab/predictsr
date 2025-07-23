@@ -34,3 +34,22 @@ test_that("We can get the column descriptions as desired", {
   )
   expect_equal(columns$Column, names)
 })
+
+test_that("We return an empty dataframe if nothing is found", {
+  with_mocked_bindings(
+    result <- GetColumnDescriptions(),
+    # mock the API calls to return an empty dataframe
+    .RequestDataPortal = function(...) {
+      return(
+        list(status = "working", result = NULL, message = "no data available")
+      )
+    },
+    .CheckDownloadResponse = function(...) {
+      return(list(status = "failed", message = "no data available"))
+    }
+  )
+
+  expect_true(inherits(result, "data.frame"))
+  expect_equal(nrow(result), 0)
+  expect_equal(ncol(result), 0)
+})
