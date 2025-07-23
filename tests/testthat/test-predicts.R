@@ -83,6 +83,25 @@ test_that("Can read in the 2022 PREDICTS database extract", {
   expect_equal(length(unique(predicts$Source_ID)), 115)
 })
 
+test_that("Can return an empty data frame if no data are available", {
+  with_mocked_bindings(
+    predicts <- GetPredictsData(),
+    .RequestDataPortal = function(...) {
+      return(
+        list(status = "working", result = NULL, message = "no data available")
+      )
+    },
+    .CheckDownloadResponse = function(...) {
+      return(list(status = "failed", message = "no data available"))
+    }
+  )
+
+  # check that the result is a data frame with no rows or columns
+  expect_true(inherits(predicts, "data.frame"))
+  expect_equal(nrow(predicts), 0)
+  expect_equal(ncol(predicts), 0)
+})
+
 test_that("Fails with incorrect inputs", {
   # weird years
   expect_error(GetPredictsData(extract = NA))
