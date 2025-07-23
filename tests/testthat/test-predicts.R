@@ -83,7 +83,7 @@ test_that("Can read in the 2022 PREDICTS database extract", {
   expect_equal(length(unique(predicts$Source_ID)), 115)
 })
 
-test_that("Can return an empty data frame if not data are available", {
+test_that("Can return an empty data frame if no data are available", {
   with_mocked_bindings(
     predicts <- GetPredictsData(),
     .RequestDataPortal = function(...) {
