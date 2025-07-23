@@ -176,6 +176,14 @@ GetColumnDescriptions <- function(...) {
   status_json <- .RequestDataPortal(column_req) |>
     .CheckDownloadResponse()
 
+  # check that the status is "complete" --- if it isn't then quietly
+  if (status_json$status != "complete") {
+    logger::log_error(
+      "Download unsuccessful: check your connection and try again"
+    )
+    return(data.frame())
+  }
+
   logger::log_debug("Pluck the download URL, and download to ZIP")
   data_zip_url <- status_json$urls$direct
 
@@ -280,6 +288,16 @@ GetColumnDescriptions <- function(...) {
 #'
 #' @noRd
 .CheckDownloadResponse <- function(dl_response, timeout = 600) {
+  if (is.null(dl_response$result)) {
+    return(
+      list(
+        status = "failed",
+        message = "Provided 'dl_response' has NULL result",
+        result = NULL
+      )
+    )
+  }
+
   logger::log_debug("Check on the status of the download (every 0.5 s)")
   status_json_request <- request(dl_response$result$status_json) |>
     req_throttle(120) |>  # 120 requests every 60s
@@ -334,6 +352,9 @@ GetColumnDescriptions <- function(...) {
 
   # check that the status is "complete"
   if (status_json$status != "complete") {
+    logger::log_error(
+      "Download unsuccessful: check your connection and try again"
+    )
     return(data.frame())
   }
 

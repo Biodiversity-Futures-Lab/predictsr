@@ -30,7 +30,11 @@ test_that("Initial request fails returns failed status", {
 
 test_that("Download request fails appropriately", {
   with_mocked_bindings(
-    result <- .CheckDownloadResponse(list()),
+    result <- .CheckDownloadResponse(
+      list(
+        result = list("download_url" = "https://data.nhm.ac.uk/download")
+      )
+    ),
 
     request = function(x, ...) {
       return(list(
