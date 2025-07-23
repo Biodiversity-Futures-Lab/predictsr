@@ -1,11 +1,6 @@
 ## R CMD check results
 
-0 errors | 0 warnings | 1 note
+0 errors | 0 warnings | 0 notes
 
-Maintainer: ‘Connor Duffin <connor.p.duffin@gmail.com>’
-
-New submission.
-
-* This is a resubmission following CRAN reviewer checks. I've updated the
-  DESCRIPTION file to with formatting improvements, and have changed all
-  `\dontrun` examples to `\donttest`.
+This is patch addresses how the package handles data not being returned due to
+API being offline, and addresses proper copyright holders.

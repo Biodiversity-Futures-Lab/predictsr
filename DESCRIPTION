@@ -1,6 +1,6 @@
 Package: predictsr
 Title: Access the 'PREDICTS' Biodiversity Database
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: c(
     person("Connor", "Duffin", , "connor.p.duffin@gmail.com", role = c("aut", "cre")),
     person("The Trustees of The Natural History Museum, London", role = c("cph")))

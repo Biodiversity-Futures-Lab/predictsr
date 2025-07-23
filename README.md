@@ -26,8 +26,7 @@ with later releases planned.
 The data were collated from spatial comparisons of local-scale
 biodiversity exposed to different intensities and types of anthropogenic
 pressures, from terrestrial sites around the world, and are described in
-Hudson et. al. (2016) <a href="https://doi:10.1002/ece3.2579"
-class="uri">https://doi:10.1002/ece3.2579</a>.
+Hudson et. al. (2016) <doi:10.1002/ece3.2579>.
 
 This package accesses the latest version of the open-access database as
 a dataframe, and is under active development.
