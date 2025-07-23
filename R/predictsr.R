@@ -176,7 +176,8 @@ GetColumnDescriptions <- function(...) {
   status_json <- .RequestDataPortal(column_req) |>
     .CheckDownloadResponse()
 
-  # check that the status is "complete" --- if it isn't then quietly
+  # check that the status is "complete" --- if it isn't, log an error and
+  # return an empty data frame to indicate failure
   if (status_json$status != "complete") {
     logger::log_error(
       "Download unsuccessful: check your connection and try again"
