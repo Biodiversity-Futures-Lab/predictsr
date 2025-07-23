@@ -34,8 +34,8 @@ data for the 2016 and/or 2022 release.
 
 The data are provided under a CC NC (non-commercial) license, which means
 that they cannot be used for commercial purposes. The 2016 release is
-available under a CC BY-NC-SA 4.0 license, and the 2022 release is available
-under a CC NC (any) license.
+available under a CC BY-NC-SA 4.0 license, and the 2022 release is
+available under a CC NC (any) license.
 }
 \examples{
 \donttest{
