@@ -53,7 +53,8 @@ GetPredictsData <- function(extract = c(2016, 2022)) {
   logger::log_debug(
     "Request PREDICTS data and pull in data as dataframe, into R"
   )
-  status_json <- .RequestDataPortal(predicts_req)
+  status_json <- .RequestDataPortal(predicts_req) |>
+    .CheckDownloadResponse()
   predicts <- .RequestRDSDataFrame(status_json)
   return(predicts)
 }
@@ -115,7 +116,8 @@ GetSitelevelSummaries <- function(extract = c(2016, 2022)) {
   logger::log_debug(
     "Request PREDICTS summary data from the data portal and pull into R"
   )
-  status_json <- .RequestDataPortal(site_req)
+  status_json <- .RequestDataPortal(site_req) |>
+    .CheckDownloadResponse()
   predicts <- .RequestRDSDataFrame(status_json)
   return(predicts)
 }
@@ -171,7 +173,8 @@ GetColumnDescriptions <- function(...) {
       package = "predictsr"
     )
   )
-  status_json <- .RequestDataPortal(column_req)
+  status_json <- .RequestDataPortal(column_req) |>
+    .CheckDownloadResponse()
 
   logger::log_debug("Pluck the download URL, and download to ZIP")
   data_zip_url <- status_json$urls$direct
@@ -202,7 +205,70 @@ GetColumnDescriptions <- function(...) {
 
 #' Request data from the NHM data portal.
 #'
+#' @description
+#' This function makes a request to the NHM data portal to download data.
+#' It will retry the request if it fails due to common errors such as
+#' concurrent requests or server errors.
+#'
 #' @param request_body_json A named list giving the body of the request.
+#' @returns A response object from the initial download request. If the request
+#'  fails, a list with `status` and `message` entries is returned.
+#'
+#' @import httr2
+#'
+#' @noRd
+.RequestDataPortal <- function(request_body_json, max_tries = 10) {
+  if (!is.list(request_body_json)) {
+    stop("Request_body_json should be a list (use e.g. jsonlite::fromJSON)")
+  }
+
+  logger::log_debug("Set download request: retry for common errors")
+  dl_request <- request(download_url) |>
+    req_body_json(request_body_json) |>
+    req_user_agent(
+      "predictsr resource download request <connor.duffin@nhm.ac.uk>"
+    ) |>
+    req_retry(
+      is_transient = \(resp) resp_status(resp) %in% c(409, 429, 500, 503),
+      max_tries = max_tries,
+      retry_on_failure = TRUE,
+      backoff = \(tries) return(1) # 1 second as NHM doesn't have rate limits
+    )
+
+  logger::log_debug("Fetch the download request and return default list o/w")
+  dl_response <- tryCatch(
+    req_perform(dl_request) |>
+      resp_body_json(),
+    error = function(e) {
+      return(e)
+    }
+  )
+
+  # if the request failed, we just return out now
+  if (inherits(dl_response, "error")) {
+    logger::log_error("Download request failed: returning empty list")
+    return(
+      list(
+        status = "failed",
+        message = dl_response$message,
+        result = NULL
+      )
+    )
+  } else {
+    logger::log_debug("Download request successful")
+    return(dl_response)
+  }
+}
+
+#' Monitor the download status reponse from the NHM data portal.
+#'
+#' @description
+#' This function checks the status of a download request made to the NHM data
+#' portal. It will poll the status endpoint until the request is complete or
+#' timed out.
+#'
+#' @param dl_response A list giving the response object from the initial
+#'   download request.
 #' @param timeout Integer giving the time (in seconds) to wait for the request.
 #'   Requests in this package usually take < 5s to be processed, so don't set
 #'   this to something really high. Default is 600s (10 minutes).
@@ -213,56 +279,38 @@ GetColumnDescriptions <- function(...) {
 #' @import httr2
 #'
 #' @noRd
-.RequestDataPortal <- function(request_body_json, timeout = 600) {
-  if (!is.list(request_body_json)) {
-    stop("Request_body_json should be a list (use e.g. jsonlite::fromJSON)")
-  }
-
-  logger::log_debug(
-    "Set the download request: retry for common error codes, or if curl fails"
-  )
-  dl_request <- request(download_url) |>
-    req_body_json(request_body_json) |>
-    req_user_agent(
-      "predictsr resource download request <connor.duffin@nhm.ac.uk>"
-    ) |>
-    req_retry(
-      is_transient = \(resp) resp_status(resp) %in% c(409, 429, 500, 503),
-      max_tries = 10,
-      retry_on_failure = TRUE
-    )
-
-  logger::log_debug("Fetch the download request")
-  dl_response <- req_perform(dl_request) |>
-    resp_body_json()
-
+.CheckDownloadResponse <- function(dl_response, timeout = 600) {
   logger::log_debug("Check on the status of the download (every 0.5 s)")
   status_json_request <- request(dl_response$result$status_json) |>
     req_throttle(120) |>  # 120 requests every 60s
     req_user_agent("predictsr status request <connor.duffin@nhm.ac.uk>")
 
-  logger::log_debug("Make initial status request to check it is working")
-  status_json <- status_json_request |>
-    req_perform() |>
-    resp_body_json()
-
   # we make 2 requests per second, so we will finish up after `timeout` seconds
   ticks <- 2 * timeout
   for (i in 1:ticks) {
     logger::log_debug("Download request in progress")
-    # break out once it has worked
-    if (status_json$status == "complete") {
+
+    # make the status request
+    status_json <- tryCatch(
+      status_json_request |>
+        req_perform() |>
+        resp_body_json(),
+      error = function(e) return(e)
+    )
+
+    # if the request failed, we just return out now
+    if (inherits(status_json, "error")) {
+      logger::log_error("Status request failed: returning empty list")
+      status_json <- list(
+        status = "failed",
+        message = status_json$message,
+        result = NULL
+      )
+      break
+    } else if (status_json$status == "complete") {
+      logger::log_debug("Download request complete")
       break
     }
-
-    # otherwise make the request (again)
-    status_json <- status_json_request |>
-      req_perform() |>
-      resp_body_json()
-  }
-
-  if (status_json$status != "complete") {
-    warning("Request to download did not complete successfully!")
   }
 
   # return the status list
@@ -279,10 +327,14 @@ GetColumnDescriptions <- function(...) {
 #'
 #' @noRd
 .RequestRDSDataFrame <- function(status_json) {
+  # check that the status_json is a list with a 'status' entry
+  if (!is.list(status_json) || !("status" %in% names(status_json))) {
+    stop("status_json should be a list with a 'status' entry")
+  }
+
+  # check that the status is "complete"
   if (status_json$status != "complete") {
-    stop(
-      "Request didn't complete (no data to download): it may have timed out"
-    )
+    return(data.frame())
   }
 
   logger::log_debug("Get the location of where the data is saved to")
