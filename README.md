@@ -49,14 +49,36 @@ Then as usual just load the package:
 
 ## Usage
 
-To pull in the database and get the data, use the `GetPredictsData`
-function:
+Most users will want to use the `LoadPredictsData` function to pull in
+the PREDICTS database extract. This downloads the database
+automatically, and saves it for you to a location you specify. It also
+writes some metadata to disk so you don’t re-download it unnecessarily.
+
+When you do so, you will need to provide a file path where `predictsr`
+will save the data to:
+
+    df_predicts <- LoadPredictsData("/home/connor/predicts.rds")
+
+After running this the first time, it will download the PREDICTS extract
+(2016 and 2022 by default), and write an associated metadata file.
+Successive calls will then just load the dataframe, without downloading
+anything new, by checking the metadata.
+
+### Extra functions
+
+As well as the `LoadPredictsData` function, there are many other
+functions included.
+
+Under the hood, `LoadPredictsData` uses the `GetPredictsData` function
+to pull in the database extract:
 
     predicts <- GetPredictsData()
 
 which by default will read in the 2016 and 2022 data, as a dataframe.
+This may be handy if you want to use your own method of caching
+(e.g. [`targets`](https://docs.ropensci.org/targets/)).
 
-To read in the site-level summaries:
+To read in the site-level summaries of the data:
 
     summaries <- GetSitelevelSummaries()
 

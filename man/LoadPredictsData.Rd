@@ -27,9 +27,20 @@ Implements a simple file-based cache. You supply a target filename
 "\if{html}{\out{<filename>}}.aux.json" (e.g. "data/predicts_2016_2022.rds.aux.json").
 \item If both exist, verify the file hash, minimal structure, and requested
 years.
-\item If validation passes (and \code{force_refresh} is FALSE), return the loaded
-object.
+\item If validation passes return the loaded object.
 \item Otherwise download fresh data via \code{GetPredictsData(extract)}, overwrite
 the RDS, write a new \code{.aux.json}, and return the dataframe.
 }
+
+The data are provided under a CC NC (non-commercial) license, which means
+that they cannot be used for commercial purposes. The 2016 release is
+available under a CC BY-NC-SA 4.0 license, and the 2022 release is available
+under a CC NC (any) license.
+}
+\examples{
+\donttest{
+  df_predicts <- LoadPredictsData("predicts.rds")
+  df_predicts_2016 <- LoadPredictsData("predicts.rds", extract = 2016)
+}
+
 }

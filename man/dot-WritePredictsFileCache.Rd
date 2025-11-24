@@ -2,7 +2,7 @@
 % Please edit documentation in R/load-predicts-data.R
 \name{.WritePredictsFileCache}
 \alias{.WritePredictsFileCache}
-\title{Writes the PREDICTS dataframe to disk}
+\title{Writes the PREDICTS dataframe to disk.}
 \usage{
 .WritePredictsFileCache(df, file_predicts, aux_file_predicts, extract)
 }

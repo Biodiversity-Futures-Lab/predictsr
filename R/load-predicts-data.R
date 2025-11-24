@@ -11,6 +11,11 @@
 #' 4. Otherwise download fresh data via `GetPredictsData(extract)`, overwrite
 #'    the RDS, write a new `.aux.json`, and return the dataframe.
 #'
+#' The data are provided under a CC NC (non-commercial) license, which means
+#' that they cannot be used for commercial purposes. The 2016 release is
+#' available under a CC BY-NC-SA 4.0 license, and the 2022 release is available
+#' under a CC NC (any) license.
+#'
 #' @param file_predicts Character path to the desired PREDICTS database RDS
 #' file (must end with ".rds").
 #' @param extract Integer vector of release years to fetch. Defaults to
@@ -18,6 +23,12 @@
 #' @param force_refresh Logical; if TRUE always re-download and overwrite
 #' existing files.
 #' @returns A dataframe containing the requested PREDICTS extract.
+#'
+#' @examples
+#' \donttest{
+#'   df_predicts <- LoadPredictsData("predicts.rds")
+#'   df_predicts_2016 <- LoadPredictsData("predicts.rds", extract = 2016)
+#' }
 #'
 #' @export
 LoadPredictsData <- function(file_predicts,

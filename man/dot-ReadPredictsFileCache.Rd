@@ -2,7 +2,7 @@
 % Please edit documentation in R/load-predicts-data.R
 \name{.ReadPredictsFileCache}
 \alias{.ReadPredictsFileCache}
-\title{Read the PREDICTS file cache}
+\title{Read the PREDICTS file cache.}
 \usage{
 .ReadPredictsFileCache(file_predicts, aux_file_predicts, requested_years)
 }

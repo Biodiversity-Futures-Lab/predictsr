@@ -2,7 +2,7 @@
 % Please edit documentation in R/load-predicts-data.R
 \name{.IsValidPredictsData}
 \alias{.IsValidPredictsData}
-\title{Check if a PREDICTS extract is valid}
+\title{Check if a PREDICTS extract is valid.}
 \usage{
 .IsValidPredictsData(df)
 }
