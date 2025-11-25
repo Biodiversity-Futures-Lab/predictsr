@@ -14,23 +14,27 @@ cache: true
 
 The [`predictsr`](https://github.com/Biodiversity-Futures-Lab/predictsr) package accesses the PREDICTS database (Hudson et al, 2013) from within R, conveniently as a dataframe. It uses the [Natural History Museum Data Portal](https://data.nhm.ac.uk/) to download the latest versions of the PREDICTS database and some related metadata. 
 
-The [PREDICTS](https://www.nhm.ac.uk/our-science/research/projects/predicts/science.html) database comprises over 4 million measurements of species at sites across the world.
-All major terrestrial plant, animal, and fungal groups are represented within the data. The most well-represented group in the data are arthropods (mainly insects), covering about 2% of the species known by science
+The [PREDICTS](https://www.nhm.ac.uk/our-science/research/projects/predicts/science.html) database comprises over 4 million measurements of species at sites across the world. All major terrestrial plant, animal, and fungal groups are represented within the data. The most well-represented group in the data are arthropods (mainly insects), covering about 2% of the species known by science
 
 There have been 2 public releases of PREDICTS data. The first was in [2016](https://data.nhm.ac.uk/dataset/the-2016-release-of-the-predicts-database-v1-1) and the second was in [2022](https://data.nhm.ac.uk/dataset/release-of-data-added-to-the-predicts-database-november-2022); each consisted of about 3 million and 1 million records, respectively. We include both, as a single dataset, in this package.
 
 *However*, the PREDICTS database is under constant development and is continuously growing, with later releases planned.
 
-To get started, let's load in the database into R and poke around. To do so you will use the `GetPredictsData` function, which pulls in the data from the data portal. I'll repeat the default option below, but you can take either 2016, 2022, or both as the extracts to fetch. It reads in both extracts into a single dataframe:
+## Loading the data
+
+To get started, let's load in the database into R and poke around. To do so you will use the `LoadPredictsData` function, which pulls in the data from the data portal and saves it locally for you. It reads in both releases into a single dataframe (by default), or you can specify which years to save:
 
 ```{r setup}
-predicts <- predictsr::GetPredictsData(extract = c(2016, 2022))
+file_predicts <- file.path(tempdir(), "predicts.rds")
+predicts <- predictsr::LoadPredictsData(file_predicts, extract = c(2016, 2022))
 str(predicts)
 ```
 
 Be patient as this may take a few seconds to run, as it downloads the data from the NHM Data Portal.
 
-So we can see that there are over 4 million records in the combined PREDICTS extracts. Let's look at a set of summary statistics for the database:
+The first time you run this, it will save the data into `file_predicts`, and store some metadata in a `*.aux.json` file. Subsequent calls will then check the metadata, and if this looks OK, just load the data in `file_predicts`. This saves you having to repeatedly download the data.
+
+We can see that there are over 4 million records in the combined PREDICTS extracts. Let's look at a set of summary statistics for the database:
 
 ```{r}
 if (nrow(predicts) > 0) {
@@ -52,7 +56,10 @@ if (nrow(predicts) > 0) {
 }
 ```
 
-So over 30,000 sites, 101 countries, and 12,892 species in this dataframe! There are a couple of important columns that should be noted. The `SS` column is what we use to identify studies when dealing with PREDICTS data. This is the concantenation of the `Source_ID`, and the `Study_number` columns. Another important identifier is the `SBBS`, the concatenation of `Source_ID`, `Study_number`, `Block` and `Site_number`, which is what we use to identify single sites in the database.
+There are over 30,000 sites, 101 countries, and 54,863 species in this dataframe, with a couple of important columns that should be noted:
+
+- The `SS` column is what we use to identify studies when dealing with PREDICTS data. This is the concantenation of the `Source_ID`, and the `Study_number` columns.
+- The `SBBS` column is the concatenation of `Source_ID`, `Study_number`, `Block` and `Site_number`, which is what we use to identify single sites in the database.
 
 Let's also check the ranges of sample collection in the database:
 
@@ -65,6 +72,21 @@ if (nrow(predicts) > 0) {
 } else {
   print("No data available in the PREDICTS database - check the download!")
 }
+```
+
+## Loading the data without caching
+
+If you don't want to cache the data, you can also just use `GetPredictsData`:
+
+```{r}
+predicts <- predictsr::GetPredictsData(extract = c(2016, 2022))
+```
+
+This will pull in the exact same data as `LoadPredictsData`, but won't save it to disk for you. If you are already using some sort of data pipeline tool (e.g. [`targets`](https://cran.r-project.org/package=targets)) then this may be your preferred option.
+
+```{r, echo=FALSE}
+# Delete the database locally
+unlink(c(file_predicts, paste0(file_predicts, ".aux.json")))
 ```
 
 ## Accessing site-level summaries
@@ -84,9 +106,9 @@ if (nrow(predicts) > 0 && nrow(summaries) > 0) {
 }
 ```
 
-This is because all of the measurement-level data has been dropped from the dataframe. Now indeed we could try and replicate the creation of the `summaries` dataframe through some {dplyr} operations. These would be the following (roughly):
+This is because all of the measurement-level data has been dropped from the dataframe. Now indeed we could try and replicate the creation of the `summaries` dataframe through some `dplyr` operations. These would be the following (roughly):
 
-**Note:** I'm not sure on the summary statistics for this one, there seems to be some differences, and there are a couple sites that don't match up.
+**Note:** there seems to be some differences as there are a couple sites that don't match up.
 
 ```{r}
 if (nrow(summaries) > 0) {
