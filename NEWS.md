@@ -1,4 +1,7 @@
-# predictsr (development version)
+# predictsr 0.2.0
+
+* Introduced `LoadPredictsData` function to save database locally via SHA-based invalidation.
+* Refactored package structure to spread functions and tests better across multiple files.
 
 # predictsr 0.1.1
 
