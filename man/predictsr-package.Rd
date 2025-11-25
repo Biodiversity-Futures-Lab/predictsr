@@ -12,6 +12,7 @@ Fetches the 'PREDICTS' database and relevant metadata from the Data Portal at th
 Useful links:
 \itemize{
   \item \url{https://biodiversity-futures-lab.github.io/predictsr/}
+  \item \url{https://github.com/Biodiversity-Futures-Lab/predictsr}
 }
 
 }

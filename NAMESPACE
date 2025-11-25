@@ -3,6 +3,7 @@
 export(GetColumnDescriptions)
 export(GetPredictsData)
 export(GetSitelevelSummaries)
+export(LoadPredictsData)
 import(httr2)
 importFrom(utils,download.file)
 importFrom(utils,read.csv)

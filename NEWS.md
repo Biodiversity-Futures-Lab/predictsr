@@ -1,3 +1,5 @@
+# predictsr (development version)
+
 # predictsr 0.1.1
 
 * Refactored underlying code to now return empty dataframes when offline or resources are unavailable (#34).
