@@ -32,7 +32,7 @@ str(predicts)
 
 Be patient as this may take a few seconds to run, as it downloads the data from the NHM Data Portal.
 
-The first time you run this, it will save the data into `file_predicts`, and store some metadata in a `*.aux.json` file. Subsequent calls will then check the metadata, and if this looks OK, just load the data in `file_predicts`. This saves you having to repeatedly download the data.
+The first time you run this, it will save the data into `file_predicts`, and store some metadata in a `*.aux.json` file. Subsequent calls will then check the metadata (via a SHA-based invalidation), and if this looks OK, just load the data in `file_predicts`. This saves you having to repeatedly download the data.
 
 We can see that there are over 4 million records in the combined PREDICTS extracts. Let's look at a set of summary statistics for the database:
 

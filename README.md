@@ -62,7 +62,9 @@ will save the data to:
 After running this the first time, it will download the PREDICTS extract
 (2016 and 2022 by default), and write an associated metadata file.
 Successive calls will then just load the dataframe, without downloading
-anything new, by checking the metadata.
+anything new, by checking the metadata (this uses a
+[SHA](https://en.wikipedia.org/wiki/Secure_Hash_Algorithms)-based
+invalidation).
 
 ### Extra functions
 
