@@ -3,7 +3,7 @@
 Given a PREDICTS database extract, loaded as an R dataframe, save it to
 disk and write the aux JSON file (\*.aux.json), which stores metadata
 for the object. This includes the release years, the timestamp of when
-it was saved, som dimensions, and the SHA-256 hash of the dataframe
+it was saved, some dimensions, and the SHA-256 hash of the dataframe
 (computed with 'digest').
 
 ## Usage
