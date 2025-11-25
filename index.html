@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">predictsr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -70,15 +70,24 @@
 <div class="section level2">
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
-<p>To pull in the database and get the data, use the <code>GetPredictsData</code> function:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>predicts <span class="ot">&lt;-</span> <span class="fu">GetPredictsData</span>()</span></code></pre></div>
-<p>which by default will read in the 2016 and 2022 data, as a dataframe.</p>
-<p>To read in the site-level summaries:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>summaries <span class="ot">&lt;-</span> <span class="fu">GetSitelevelSummaries</span>()</span></code></pre></div>
+<p>Most users will want to use the <code>LoadPredictsData</code> function to pull in the PREDICTS database extract. This downloads the database automatically, and saves it for you to a location you specify. It also writes some metadata to disk so you don’t re-download it unnecessarily.</p>
+<p>When you do so, you will need to provide a file path where <code>predictsr</code> will save the data to:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>df_predicts <span class="ot">&lt;-</span> <span class="fu">LoadPredictsData</span>(<span class="st">"/home/connor/predicts.rds"</span>)</span></code></pre></div>
+<p>After running this the first time, it will download the PREDICTS extract (2016 and 2022 by default), and write an associated metadata file. Successive calls will then just load the dataframe, without downloading anything new, by checking the metadata (this uses a <a href="https://en.wikipedia.org/wiki/Secure_Hash_Algorithms" class="external-link">SHA</a>-based invalidation).</p>
+<div class="section level3">
+<h3 id="extra-functions">Extra functions<a class="anchor" aria-label="anchor" href="#extra-functions"></a>
+</h3>
+<p>As well as the <code>LoadPredictsData</code> function, there are many other functions included.</p>
+<p>Under the hood, <code>LoadPredictsData</code> uses the <code>GetPredictsData</code> function to pull in the database extract:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>predicts <span class="ot">&lt;-</span> <span class="fu">GetPredictsData</span>()</span></code></pre></div>
+<p>which by default will read in the 2016 and 2022 data, as a dataframe. This may be handy if you want to use your own method of caching (e.g. <a href="https://docs.ropensci.org/targets/" class="external-link"><code>targets</code></a>).</p>
+<p>To read in the site-level summaries of the data:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>summaries <span class="ot">&lt;-</span> <span class="fu">GetSitelevelSummaries</span>()</span></code></pre></div>
 <p>which will also, by default, read in the 2016 and 2022 data, as a dataframe.</p>
 <p>To read in the descriptions of the columns of the database extract:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>columns <span class="ot">&lt;-</span> <span class="fu">GetColumnDescriptions</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>columns <span class="ot">&lt;-</span> <span class="fu">GetColumnDescriptions</span>()</span></code></pre></div>
 <p>which will give you a dataframe on the information on the columns that are in the database extract.</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="notes">Notes<a class="anchor" aria-label="anchor" href="#notes"></a>
@@ -142,7 +151,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

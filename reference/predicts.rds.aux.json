@@ -1,0 +1,9 @@
+{
+  "years": 2016,
+  "timestamp": "2025-11-25 14:32:31 UTC",
+  "n_rows": 3278056,
+  "n_cols": 67,
+  "columns": ["Source_ID", "Reference", "Study_number", "Study_name", "SS", "Diversity_metric", "Diversity_metric_unit", "Diversity_metric_type", "Diversity_metric_is_effort_sensitive", "Diversity_metric_is_suitable_for_Chao", "Sampling_method", "Sampling_effort_unit", "Study_common_taxon", "Rank_of_study_common_taxon", "Site_number", "Site_name", "Block", "SSS", "SSB", "SSBS", "Sample_start_earliest", "Sample_end_latest", "Sample_midpoint", "Sample_date_resolution", "Max_linear_extent_metres", "Habitat_patch_area_square_metres", "Sampling_effort", "Rescaled_sampling_effort", "Habitat_as_described", "Predominant_land_use", "Source_for_predominant_land_use", "Use_intensity", "Km_to_nearest_edge_of_habitat", "Years_since_fragmentation_or_conversion", "Transect_details", "Coordinates_method", "Longitude", "Latitude", "Country_distance_metres", "Country", "UN_subregion", "UN_region", "Ecoregion_distance_metres", "Ecoregion", "Biome", "Realm", "Hotspot", "Wilderness_area", "Taxon_number", "Taxon_name_entered", "Indication", "Parsed_name", "Taxon", "COL_ID", "Name_status", "Rank", "Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species", "Best_guess_binomial", "Higher_taxon", "Measurement", "Effort_corrected_measurement"],
+  "sha256": "5db89507a0f4056a3cada1580d498325255a79e474db979932b9d8ef195c0670",
+  "pkg_version": "0.1.1.9000"
+}

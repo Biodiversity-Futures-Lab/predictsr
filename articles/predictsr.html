@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">predictsr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,14 +78,24 @@ each consisted of about 3 million and 1 million records, respectively.
 We include both, as a single dataset, in this package.</p>
 <p><em>However</em>, the PREDICTS database is under constant development
 and is continuously growing, with later releases planned.</p>
+<div class="section level2">
+<h2 id="loading-the-data">Loading the data<a class="anchor" aria-label="anchor" href="#loading-the-data"></a>
+</h2>
 <p>To get started, let’s load in the database into R and poke around. To
-do so you will use the <code>GetPredictsData</code> function, which
-pulls in the data from the data portal. I’ll repeat the default option
-below, but you can take either 2016, 2022, or both as the extracts to
-fetch. It reads in both extracts into a single dataframe:</p>
+do so you will use the <code>LoadPredictsData</code> function, which
+pulls in the data from the data portal and saves it locally for you. It
+reads in both releases into a single dataframe (by default), or you can
+specify which years to save:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">predicts</span> <span class="op">&lt;-</span> <span class="fu">predictsr</span><span class="fu">::</span><span class="fu"><a href="../reference/GetPredictsData.html">GetPredictsData</a></span><span class="op">(</span>extract <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2016</span>, <span class="fl">2022</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">predicts</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">file_predicts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"predicts.rds"</span><span class="op">)</span></span>
+<span><span class="va">predicts</span> <span class="op">&lt;-</span> <span class="fu">predictsr</span><span class="fu">::</span><span class="fu"><a href="../reference/LoadPredictsData.html">LoadPredictsData</a></span><span class="op">(</span><span class="va">file_predicts</span>, extract <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2016</span>, <span class="fl">2022</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## INFO [2025-11-25 14:32:33] Pulling in extracts for 2016</span></span>
+<span><span class="co">## INFO [2025-11-25 14:32:33] Pulling in extracts for 2022</span></span>
+<span><span class="co">## INFO [2025-11-25 14:32:33] No existing valid cache at /tmp/Rtmpn2PYot/predicts.rds; will download</span></span>
+<span><span class="co">## INFO [2025-11-25 14:32:33] Downloading fresh PREDICTS data (extract=2016,2022)</span></span>
+<span><span class="co">## INFO [2025-11-25 14:33:23] Wrote data file 'predicts.rds' and aux metadata 'predicts.rds.aux.json'</span></span></code></pre>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">predicts</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## 'data.frame':    4318808 obs. of  67 variables:</span></span>
 <span><span class="co">##  $ Source_ID                              : Factor w/ 708 levels "AD1_2001__Liow",..: 1 1 1 1 1 1 1 1 1 1 ...</span></span>
 <span><span class="co">##  $ Reference                              : Factor w/ 605 levels "Aben et al. 2008",..: 250 250 250 250 250 250 250 250 250 250 ...</span></span>
@@ -156,10 +166,16 @@ fetch. It reads in both extracts into a single dataframe:</p>
 <span><span class="co">##  $ Effort_corrected_measurement           : num  42 242 232 185 94.5 5 22 5 9 10 ...</span></span></code></pre>
 <p>Be patient as this may take a few seconds to run, as it downloads the
 data from the NHM Data Portal.</p>
-<p>So we can see that there are over 4 million records in the combined
+<p>The first time you run this, it will save the data into
+<code>file_predicts</code>, and store some metadata in a
+<code>*.aux.json</code> file. Subsequent calls will then check the
+metadata (via a SHA-based invalidation), and if this looks OK, just load
+the data in <code>file_predicts</code>. This saves you having to
+repeatedly download the data.</p>
+<p>We can see that there are over 4 million records in the combined
 PREDICTS extracts. Let’s look at a set of summary statistics for the
 database:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">predicts</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">taxa</span> <span class="op">&lt;-</span> <span class="va">predicts</span><span class="op">[</span></span>
 <span>    <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/duplicated.html" class="external-link">duplicated</a></span><span class="op">(</span><span class="va">predicts</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Source_ID"</span>, <span class="st">"Study_name"</span>, <span class="st">"Taxon_name_entered"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>,</span>
@@ -178,17 +194,20 @@ database:</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="st">"No data available - check the download!"</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <pre><code><span><span class="co">## This database has 817 studies across 35736 sites, in 101 countries, and with 54863 species.</span></span></code></pre>
-<p>So over 30,000 sites, 101 countries, and 12,892 species in this
-dataframe! There are a couple of important columns that should be noted.
-The <code>SS</code> column is what we use to identify studies when
+<p>There are over 30,000 sites, 101 countries, and 54,863 species in
+this dataframe, with a couple of important columns that should be
+noted:</p>
+<ul>
+<li>The <code>SS</code> column is what we use to identify studies when
 dealing with PREDICTS data. This is the concantenation of the
-<code>Source_ID</code>, and the <code>Study_number</code> columns.
-Another important identifier is the <code>SBBS</code>, the concatenation
-of <code>Source_ID</code>, <code>Study_number</code>, <code>Block</code>
+<code>Source_ID</code>, and the <code>Study_number</code> columns.</li>
+<li>The <code>SBBS</code> column is the concatenation of
+<code>Source_ID</code>, <code>Study_number</code>, <code>Block</code>
 and <code>Site_number</code>, which is what we use to identify single
-sites in the database.</p>
+sites in the database.</li>
+</ul>
 <p>Let’s also check the ranges of sample collection in the database:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">predicts</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu">glue</span><span class="fu">::</span><span class="fu"><a href="https://glue.tidyverse.org/reference/glue.html" class="external-link">glue</a></span><span class="op">(</span></span>
 <span>    <span class="st">"Earliest sample collection (midpoint): {min(predicts$Sample_midpoint)}, "</span>,</span>
@@ -198,6 +217,19 @@ sites in the database.</p>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="st">"No data available in the PREDICTS database - check the download!"</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <pre><code><span><span class="co">## Earliest sample collection (midpoint): 1984-04-22, latest sample collection (midpoint): 2018-05-01</span></span></code></pre>
+</div>
+<div class="section level2">
+<h2 id="loading-the-data-without-caching">Loading the data without caching<a class="anchor" aria-label="anchor" href="#loading-the-data-without-caching"></a>
+</h2>
+<p>If you don’t want to cache the data, you can also just use
+<code>GetPredictsData</code>:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">predicts</span> <span class="op">&lt;-</span> <span class="fu">predictsr</span><span class="fu">::</span><span class="fu"><a href="../reference/GetPredictsData.html">GetPredictsData</a></span><span class="op">(</span>extract <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2016</span>, <span class="fl">2022</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>This will pull in the exact same data as
+<code>LoadPredictsData</code>, but won’t save it to disk for you. If you
+are already using some sort of data pipeline tool (e.g. <a href="https://cran.r-project.org/package=targets" class="external-link"><code>targets</code></a>)
+then this may be your preferred option.</p>
+</div>
 <div class="section level2">
 <h2 id="accessing-site-level-summaries">Accessing site-level summaries<a class="anchor" aria-label="anchor" href="#accessing-site-level-summaries"></a>
 </h2>
@@ -205,7 +237,7 @@ sites in the database.</p>
 release; to get <em>these data</em> you will need to use the
 <code>GetSitelevelSummaries</code> function. The function call is very
 similar to pull in the summaries for the same data as above:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">summaries</span> <span class="op">&lt;-</span> <span class="fu">predictsr</span><span class="fu">::</span><span class="fu"><a href="../reference/GetSitelevelSummaries.html">GetSitelevelSummaries</a></span><span class="op">(</span>extract <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2016</span>, <span class="fl">2022</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">summaries</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## 'data.frame':    35738 obs. of  50 variables:</span></span>
@@ -261,7 +293,7 @@ similar to pull in the summaries for the same data as above:</p>
 <span><span class="co">##  $ Higher_taxa                            : chr  "Hymenoptera" "Hymenoptera" "Hymenoptera" "Hymenoptera" ...</span></span></code></pre>
 <p>Investigating the summary data closer we see that there are a number
 of missing columns between the two dataframes:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">predicts</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span> <span class="op">&amp;&amp;</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">summaries</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">predicts</span><span class="op">)</span><span class="op">[</span><span class="op">!</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">predicts</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">summaries</span><span class="op">)</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
@@ -277,12 +309,11 @@ of missing columns between the two dataframes:</p>
 <span><span class="co">## [19] "Effort_corrected_measurement"</span></span></code></pre>
 <p>This is because all of the measurement-level data has been dropped
 from the dataframe. Now indeed we could try and replicate the creation
-of the <code>summaries</code> dataframe through some {dplyr} operations.
-These would be the following (roughly):</p>
-<p><strong>Note:</strong> I’m not sure on the summary statistics for
-this one, there seems to be some differences, and there are a couple
-sites that don’t match up.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+of the <code>summaries</code> dataframe through some <code>dplyr</code>
+operations. These would be the following (roughly):</p>
+<p><strong>Note:</strong> there seems to be some differences as there
+are a couple sites that don’t match up.</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">summaries</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">summaries_rep</span> <span class="op">&lt;-</span> <span class="va">predicts</span> <span class="op">|&gt;</span></span>
 <span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
@@ -325,7 +356,7 @@ sites that don’t match up.</p>
 database, and within the NHM Data portal releases, we have included a
 description of the data that is used in each of these columns. You can
 access this via the <code>GetColumnDescriptions</code> function:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">descriptions</span> <span class="op">&lt;-</span> <span class="fu">predictsr</span><span class="fu">::</span><span class="fu"><a href="../reference/GetColumnDescriptions.html">GetColumnDescriptions</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">descriptions</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## 'data.frame':    69 obs. of  8 variables:</span></span>
@@ -428,7 +459,7 @@ project.” Ecology and evolution 7.1 (2017): 145-188
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

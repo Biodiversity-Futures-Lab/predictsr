@@ -10,6 +10,10 @@
 <url><loc>https://biodiversity-futures-lab.github.io/predictsr/reference/GetColumnDescriptions.html</loc></url>
 <url><loc>https://biodiversity-futures-lab.github.io/predictsr/reference/GetPredictsData.html</loc></url>
 <url><loc>https://biodiversity-futures-lab.github.io/predictsr/reference/GetSitelevelSummaries.html</loc></url>
+<url><loc>https://biodiversity-futures-lab.github.io/predictsr/reference/LoadPredictsData.html</loc></url>
+<url><loc>https://biodiversity-futures-lab.github.io/predictsr/reference/dot-IsValidPredictsData.html</loc></url>
+<url><loc>https://biodiversity-futures-lab.github.io/predictsr/reference/dot-ReadPredictsFileCache.html</loc></url>
+<url><loc>https://biodiversity-futures-lab.github.io/predictsr/reference/dot-WritePredictsFileCache.html</loc></url>
 <url><loc>https://biodiversity-futures-lab.github.io/predictsr/reference/index.html</loc></url>
 <url><loc>https://biodiversity-futures-lab.github.io/predictsr/reference/predictsr-package.html</loc></url>
 </urlset>
