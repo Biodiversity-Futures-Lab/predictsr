@@ -50,17 +50,17 @@ A dataframe containing the requested PREDICTS extract.
 ``` r
 # \donttest{
   df_predicts <- LoadPredictsData("predicts.rds")
-#> INFO [2025-11-25 15:00:37] Pulling in extracts for 2016
-#> INFO [2025-11-25 15:00:37] Pulling in extracts for 2022
-#> INFO [2025-11-25 15:00:37] No existing valid cache at predicts.rds; will download
-#> INFO [2025-11-25 15:00:37] Downloading fresh PREDICTS data (extract=2016,2022)
-#> INFO [2025-11-25 15:01:33] Wrote data file 'predicts.rds' and aux metadata 'predicts.rds.aux.json'
+#> INFO [2025-11-25 15:26:36] Pulling in extracts for 2016
+#> INFO [2025-11-25 15:26:36] Pulling in extracts for 2022
+#> INFO [2025-11-25 15:26:36] No existing valid cache at predicts.rds; will download
+#> INFO [2025-11-25 15:26:36] Downloading fresh PREDICTS data (extract=2016,2022)
+#> INFO [2025-11-25 15:27:23] Wrote data file 'predicts.rds' and aux metadata 'predicts.rds.aux.json'
   df_predicts_2016 <- LoadPredictsData("predicts.rds", extract = 2016)
-#> INFO [2025-11-25 15:01:33] Pulling in extracts for 2016
-#> INFO [2025-11-25 15:01:33] Attempting to load cached PREDICTS data from: predicts.rds
-#> WARN [2025-11-25 15:01:33] Metadata years (2016,2022) differ from requested years (2016).
-#> INFO [2025-11-25 15:01:33] Cached data invalid; will re-download and overwrite
-#> INFO [2025-11-25 15:01:33] Downloading fresh PREDICTS data (extract=2016)
-#> INFO [2025-11-25 15:02:08] Wrote data file 'predicts.rds' and aux metadata 'predicts.rds.aux.json'
+#> INFO [2025-11-25 15:27:23] Pulling in extracts for 2016
+#> INFO [2025-11-25 15:27:23] Attempting to load cached PREDICTS data from: predicts.rds
+#> WARN [2025-11-25 15:27:23] Metadata years (2016,2022) differ from requested years (2016).
+#> INFO [2025-11-25 15:27:23] Cached data invalid; will re-download and overwrite
+#> INFO [2025-11-25 15:27:23] Downloading fresh PREDICTS data (extract=2016)
+#> INFO [2025-11-25 15:28:02] Wrote data file 'predicts.rds' and aux metadata 'predicts.rds.aux.json'
 # }
 ```
