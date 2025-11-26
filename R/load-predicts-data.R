@@ -4,7 +4,7 @@
 #' Implements a simple file-based cache. You supply a target filename
 #' (e.g. "data/predicts_2016_2022.rds"). The function will:
 #' 1. Look for that RDS file and the companion metadata file
-#'    "file-name.aux.json" (e.g. "data/predicts_2016_2022.rds.aux.json").
+#'    "filename.aux.json" (e.g. "data/predicts_2016_2022.rds.aux.json").
 #' 2. If both exist, verify the file hash, minimal structure, and requested
 #'    years.
 #' 3. If validation passes return the loaded object.
@@ -26,8 +26,8 @@
 #'
 #' @examples
 #' \donttest{
-#'   df_predicts <- LoadPredictsData("predicts.rds")
-#'   df_predicts_2016 <- LoadPredictsData("predicts.rds", extract = 2016)
+#'   file_predicts <- file.path(tempdir(), "predicts.rds")
+#'   df_predicts <- LoadPredictsData(file.path(tempdir(), "predicts.rds"))
 #' }
 #'
 #' @export
