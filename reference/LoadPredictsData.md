@@ -3,8 +3,8 @@
 Implements a simple file-based cache. You supply a target filename (e.g.
 "data/predicts_2016_2022.rds"). The function will:
 
-1.  Look for that RDS file and the companion metadata file ".aux.json"
-    (e.g. "data/predicts_2016_2022.rds.aux.json").
+1.  Look for that RDS file and the companion metadata file
+    "filename.aux.json" (e.g. "data/predicts_2016_2022.rds.aux.json").
 
 2.  If both exist, verify the file hash, minimal structure, and
     requested years.
@@ -49,18 +49,12 @@ A dataframe containing the requested PREDICTS extract.
 
 ``` r
 # \donttest{
-  df_predicts <- LoadPredictsData("predicts.rds")
-#> INFO [2025-11-25 15:26:36] Pulling in extracts for 2016
-#> INFO [2025-11-25 15:26:36] Pulling in extracts for 2022
-#> INFO [2025-11-25 15:26:36] No existing valid cache at predicts.rds; will download
-#> INFO [2025-11-25 15:26:36] Downloading fresh PREDICTS data (extract=2016,2022)
-#> INFO [2025-11-25 15:27:23] Wrote data file 'predicts.rds' and aux metadata 'predicts.rds.aux.json'
-  df_predicts_2016 <- LoadPredictsData("predicts.rds", extract = 2016)
-#> INFO [2025-11-25 15:27:23] Pulling in extracts for 2016
-#> INFO [2025-11-25 15:27:23] Attempting to load cached PREDICTS data from: predicts.rds
-#> WARN [2025-11-25 15:27:23] Metadata years (2016,2022) differ from requested years (2016).
-#> INFO [2025-11-25 15:27:23] Cached data invalid; will re-download and overwrite
-#> INFO [2025-11-25 15:27:23] Downloading fresh PREDICTS data (extract=2016)
-#> INFO [2025-11-25 15:28:02] Wrote data file 'predicts.rds' and aux metadata 'predicts.rds.aux.json'
+  file_predicts <- file.path(tempdir(), "predicts.rds")
+  df_predicts <- LoadPredictsData(file.path(tempdir(), "predicts.rds"))
+#> INFO [2025-11-26 10:15:46] Pulling in extracts for 2016
+#> INFO [2025-11-26 10:15:46] Pulling in extracts for 2022
+#> INFO [2025-11-26 10:15:46] No existing valid cache at /tmp/RtmpVB5MQD/predicts.rds; will download
+#> INFO [2025-11-26 10:15:46] Downloading fresh PREDICTS data (extract=2016,2022)
+#> INFO [2025-11-26 10:16:35] Wrote data file 'predicts.rds' and aux metadata 'predicts.rds.aux.json'
 # }
 ```
