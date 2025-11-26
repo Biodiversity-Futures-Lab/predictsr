@@ -37,11 +37,11 @@ file_predicts <- file.path(tempdir(), "predicts.rds")
 predicts <- predictsr::LoadPredictsData(file_predicts, extract = c(2016, 2022))
 ```
 
-    ## INFO [2025-11-26 10:16:37] Pulling in extracts for 2016
-    ## INFO [2025-11-26 10:16:37] Pulling in extracts for 2022
-    ## INFO [2025-11-26 10:16:37] No existing valid cache at /tmp/RtmpfbETVw/predicts.rds; will download
-    ## INFO [2025-11-26 10:16:37] Downloading fresh PREDICTS data (extract=2016,2022)
-    ## INFO [2025-11-26 10:17:27] Wrote data file 'predicts.rds' and aux metadata 'predicts.rds.aux.json'
+    ## INFO [2025-11-26 10:26:29] Pulling in extracts for 2016
+    ## INFO [2025-11-26 10:26:29] Pulling in extracts for 2022
+    ## INFO [2025-11-26 10:26:29] No existing valid cache at /tmp/Rtmpa8ZFiM/predicts.rds; will download
+    ## INFO [2025-11-26 10:26:29] Downloading fresh PREDICTS data (extract=2016,2022)
+    ## INFO [2025-11-26 10:27:46] Wrote data file 'predicts.rds' and aux metadata 'predicts.rds.aux.json'
 
 ``` r
 str(predicts)
