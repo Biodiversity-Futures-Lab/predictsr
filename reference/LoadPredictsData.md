@@ -51,10 +51,10 @@ A dataframe containing the requested PREDICTS extract.
 # \donttest{
   file_predicts <- file.path(tempdir(), "predicts.rds")
   df_predicts <- LoadPredictsData(file.path(tempdir(), "predicts.rds"))
-#> INFO [2025-11-26 10:25:21] Pulling in extracts for 2016
-#> INFO [2025-11-26 10:25:21] Pulling in extracts for 2022
-#> INFO [2025-11-26 10:25:21] No existing valid cache at /tmp/Rtmpb2BDPs/predicts.rds; will download
-#> INFO [2025-11-26 10:25:21] Downloading fresh PREDICTS data (extract=2016,2022)
-#> INFO [2025-11-26 10:26:28] Wrote data file 'predicts.rds' and aux metadata 'predicts.rds.aux.json'
+#> INFO [2025-12-01 09:41:26] Pulling in extracts for 2016
+#> INFO [2025-12-01 09:41:26] Pulling in extracts for 2022
+#> INFO [2025-12-01 09:41:26] No existing valid cache at /tmp/RtmpSHHzDH/predicts.rds; will download
+#> INFO [2025-12-01 09:41:26] Downloading fresh PREDICTS data (extract=2016,2022)
+#> INFO [2025-12-01 09:42:14] Wrote data file 'predicts.rds' and aux metadata 'predicts.rds.aux.json'
 # }
 ```

@@ -2,6 +2,8 @@
 
 ## predictsr 0.2.0
 
+CRAN release: 2025-11-28
+
 - Introduced `LoadPredictsData` function to save database locally via
   SHA-based invalidation.
 - Refactored package structure to spread functions and tests better
