@@ -85,9 +85,11 @@
     )
   }
 
+  logger::log_debug("Status JSON: {dl_response$result$status_json}")
+
   logger::log_debug("Check on the status of the download (every 0.5 s)")
   status_json_request <- request(dl_response$result$status_json) |>
-    req_throttle(120) |>  # 120 requests every 60s
+    req_throttle(120) |> # 120 requests every 60s
     req_user_agent("predictsr status request <connor.duffin@nhm.ac.uk>")
 
   # we make 2 requests per second, so we will finish up after `timeout` seconds

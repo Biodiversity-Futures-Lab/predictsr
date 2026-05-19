@@ -12,9 +12,14 @@ expect_predicts_metadata <- function(meta_file, expected_years, expected_sha) {
   meta <- jsonlite::read_json(meta_file)
 
   expect_equal(
-    names(meta), 
+    names(meta),
     c(
-      "years", "timestamp", "n_rows", "n_cols", "columns", "sha256",
+      "years",
+      "timestamp",
+      "n_rows",
+      "n_cols",
+      "columns",
+      "sha256",
       "pkg_version"
     )
   )
@@ -105,7 +110,7 @@ test_that("Can read in the 2022 PREDICTS database extract", {
 })
 
 test_that("Can load an empty data frame if no data are available", {
-  files <- predicts_test_files(c(2016, 2022))  # years irrelevant; mock returns empty
+  files <- predicts_test_files(c(2016, 2022)) # years irrelevant; mock returns empty
 
   with_mocked_bindings(
     {

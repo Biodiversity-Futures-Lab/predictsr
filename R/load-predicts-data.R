@@ -31,9 +31,11 @@
 #' }
 #'
 #' @export
-LoadPredictsData <- function(file_predicts,
-                             extract = c(2016, 2022),
-                             force_refresh = FALSE) {
+LoadPredictsData <- function(
+  file_predicts,
+  extract = c(2016, 2022),
+  force_refresh = FALSE
+) {
   if (!is.character(file_predicts) || length(file_predicts) != 1L) {
     stop("'file' must be a single character string")
   }
@@ -50,8 +52,11 @@ LoadPredictsData <- function(file_predicts,
   if (!dir.exists(parent_dir)) {
     ok <- dir.create(parent_dir, recursive = TRUE, showWarnings = FALSE)
     if (!ok && !dir.exists(parent_dir)) {
-      stop("Failed to create parent directory '", parent_dir,
-           "'. Check path or permissions.")
+      stop(
+        "Failed to create parent directory '",
+        parent_dir,
+        "'. Check path or permissions."
+      )
     }
   }
 
@@ -59,7 +64,9 @@ LoadPredictsData <- function(file_predicts,
   have_cache <- file.exists(file_predicts) && file.exists(aux_file_predicts)
 
   if (have_cache && !force_refresh) {
-    logger::log_info("Attempting to load cached PREDICTS data from: {file_predicts}")
+    logger::log_info(
+      "Attempting to load cached PREDICTS data from: {file_predicts}"
+    )
     cached <- .ReadPredictsFileCache(file_predicts, aux_file_predicts, extract)
 
     if (cached$valid) {
@@ -69,12 +76,18 @@ LoadPredictsData <- function(file_predicts,
       logger::log_info("Cached data invalid; will re-download and overwrite")
     }
   } else if (force_refresh && have_cache) {
-    logger::log_info("Refresh requested; ignoring existing cache at {file_predicts}")
+    logger::log_info(
+      "Refresh requested; ignoring existing cache at {file_predicts}"
+    )
   } else if (!have_cache) {
-    logger::log_info("No existing valid cache at {file_predicts}; will download")
+    logger::log_info(
+      "No existing valid cache at {file_predicts}; will download"
+    )
   }
 
-  logger::log_info("Downloading fresh PREDICTS data (extract={paste(extract, collapse=',')})")
+  logger::log_info(
+    "Downloading fresh PREDICTS data (extract={paste(extract, collapse=',')})"
+  )
   df <- GetPredictsData(extract = extract)
 
   .WritePredictsFileCache(df, file_predicts, aux_file_predicts, extract)
@@ -97,10 +110,12 @@ LoadPredictsData <- function(file_predicts,
 #' be saved to disk.
 #' @param extract Numeric vector of release years to be saved.
 #' @returns TRUE invisibly.
-.WritePredictsFileCache <- function(df, 
-                                    file_predicts, 
-                                    aux_file_predicts, 
-                                    extract) {
+.WritePredictsFileCache <- function(
+  df,
+  file_predicts,
+  aux_file_predicts,
+  extract
+) {
   saveRDS(df, file_predicts)
 
   sha <- tryCatch(
@@ -119,9 +134,9 @@ LoadPredictsData <- function(file_predicts,
   )
 
   jsonlite::write_json(
-    aux, 
-    aux_file_predicts, 
-    pretty = TRUE, 
+    aux,
+    aux_file_predicts,
+    pretty = TRUE,
     auto_unbox = TRUE
   )
   logger::log_info(
@@ -144,9 +159,11 @@ LoadPredictsData <- function(file_predicts,
 #' @returns List, a named list of three elements: 'valid', a boolean indicating if
 #' the cache is valid; 'data', a dataframe containing the cached PREDICTS data;
 #' and 'aux', the auxiliary data loaded from the cache.
-.ReadPredictsFileCache <- function(file_predicts, 
-                                   aux_file_predicts, 
-                                   requested_years) {
+.ReadPredictsFileCache <- function(
+  file_predicts,
+  aux_file_predicts,
+  requested_years
+) {
   # Load the auxiliary file - any errors return NULL
   aux <- tryCatch(
     jsonlite::read_json(aux_file_predicts),
@@ -159,7 +176,12 @@ LoadPredictsData <- function(file_predicts,
 
   # Check that the contents of the metadata are what we want
   names_aux <- c(
-    "years", "timestamp", "n_rows", "n_cols", "columns", "sha256",
+    "years",
+    "timestamp",
+    "n_rows",
+    "n_cols",
+    "columns",
+    "sha256",
     "pkg_version"
   )
   if (!setequal(names_aux, names(aux))) {
@@ -170,9 +192,11 @@ LoadPredictsData <- function(file_predicts,
     return(list(valid = FALSE, data = NULL, aux = NULL))
   }
 
-  if (!all(
-    (sort(unlist(aux$years)) - sort(requested_years)) <= 1e-8
-  )) {
+  if (
+    !all(
+      (sort(unlist(aux$years)) - sort(requested_years)) <= 1e-8
+    )
+  ) {
     logger::log_warn(
       "Metadata years ({paste(aux$years, collapse=',')}) differ from requested years ({paste(requested_years, collapse=',')})."
     )
@@ -230,25 +254,72 @@ LoadPredictsData <- function(file_predicts,
 
   # Check a subset of the columns are present
   names_predicts <- c(
-    "Source_ID", "Reference", "Study_number", "Study_name", "SS",
-    "Diversity_metric", "Diversity_metric_unit", "Diversity_metric_type",
+    "Source_ID",
+    "Reference",
+    "Study_number",
+    "Study_name",
+    "SS",
+    "Diversity_metric",
+    "Diversity_metric_unit",
+    "Diversity_metric_type",
     "Diversity_metric_is_effort_sensitive",
-    "Diversity_metric_is_suitable_for_Chao", "Sampling_method",
-    "Sampling_effort_unit", "Study_common_taxon", "Rank_of_study_common_taxon",
-    "Site_number", "Site_name", "Block", "SSS", "SSB", "SSBS",
-    "Sample_start_earliest", "Sample_end_latest", "Sample_midpoint",
-    "Sample_date_resolution", "Max_linear_extent_metres",
-    "Habitat_patch_area_square_metres", "Sampling_effort",
-    "Rescaled_sampling_effort", "Habitat_as_described", "Predominant_land_use",
-    "Source_for_predominant_land_use", "Use_intensity",
-    "Km_to_nearest_edge_of_habitat", "Years_since_fragmentation_or_conversion",
-    "Transect_details", "Coordinates_method", "Longitude", "Latitude",
-    "Country_distance_metres", "Country", "UN_subregion", "UN_region",
-    "Ecoregion_distance_metres", "Ecoregion", "Biome", "Realm", "Hotspot",
-    "Wilderness_area", "Taxon_number", "Taxon_name_entered", "Indication",
-    "Parsed_name", "Taxon", "COL_ID", "Name_status", "Rank", "Kingdom",
-    "Phylum", "Class", "Order", "Family", "Genus", "Species",
-    "Best_guess_binomial", "Higher_taxon", "Measurement",
+    "Diversity_metric_is_suitable_for_Chao",
+    "Sampling_method",
+    "Sampling_effort_unit",
+    "Study_common_taxon",
+    "Rank_of_study_common_taxon",
+    "Site_number",
+    "Site_name",
+    "Block",
+    "SSS",
+    "SSB",
+    "SSBS",
+    "Sample_start_earliest",
+    "Sample_end_latest",
+    "Sample_midpoint",
+    "Sample_date_resolution",
+    "Max_linear_extent_metres",
+    "Habitat_patch_area_square_metres",
+    "Sampling_effort",
+    "Rescaled_sampling_effort",
+    "Habitat_as_described",
+    "Predominant_land_use",
+    "Source_for_predominant_land_use",
+    "Use_intensity",
+    "Km_to_nearest_edge_of_habitat",
+    "Years_since_fragmentation_or_conversion",
+    "Transect_details",
+    "Coordinates_method",
+    "Longitude",
+    "Latitude",
+    "Country_distance_metres",
+    "Country",
+    "UN_subregion",
+    "UN_region",
+    "Ecoregion_distance_metres",
+    "Ecoregion",
+    "Biome",
+    "Realm",
+    "Hotspot",
+    "Wilderness_area",
+    "Taxon_number",
+    "Taxon_name_entered",
+    "Indication",
+    "Parsed_name",
+    "Taxon",
+    "COL_ID",
+    "Name_status",
+    "Rank",
+    "Kingdom",
+    "Phylum",
+    "Class",
+    "Order",
+    "Family",
+    "Genus",
+    "Species",
+    "Best_guess_binomial",
+    "Higher_taxon",
+    "Measurement",
     "Effort_corrected_measurement"
   )
   if (!setequal(names_predicts, names(df))) {
