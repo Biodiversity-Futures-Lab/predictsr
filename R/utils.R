@@ -89,11 +89,12 @@
 
   logger::log_debug("Check on the status of the download (every 0.5 s)")
   status_json_request <- request(dl_response$result$status_json) |>
-    req_throttle(120) |> # 120 requests every 60s
+    req_throttle(capacity = 60, fill_time_s = 30) |> # 60 requests every 30s
     req_user_agent("predictsr status request <connor.duffin@nhm.ac.uk>")
 
-  # we make 2 requests per second, so we will finish up after `timeout` seconds
-  ticks <- 2 * timeout
+  # we make 2 requests per second, so we will finish up after 'timeout' seconds
+  req_per_second <- 2
+  ticks <- req_per_second * timeout
   for (i in 1:ticks) {
     logger::log_debug("Download request in progress")
 
@@ -117,7 +118,15 @@
     } else if (status_json$status == "complete") {
       logger::log_debug("Download request complete")
       break
+    } else {
+      Sys.sleep(1 / req_per_second)
     }
+  }
+
+  if (status_json$status != "complete" && status_json$status != "failed") {
+    logger::log_error(
+      "Download request timed out: check your connection and try again"
+    )
   }
 
   # return the status list
