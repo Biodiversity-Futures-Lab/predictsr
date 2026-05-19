@@ -7,7 +7,7 @@ predicts_test_files <- function(years) {
   list(data = data_path, meta = meta_path)
 }
 
-# Assert metadata structure + specific SHA + years
+# Assert metadata structure + years + SHA presence
 expect_predicts_metadata <- function(meta_file, expected_years) {
   meta <- jsonlite::read_json(meta_file)
 
