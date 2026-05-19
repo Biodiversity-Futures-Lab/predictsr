@@ -6,6 +6,7 @@
 [![CRAN
 status](https://www.r-pkg.org/badges/version/predictsr)](https://cran.r-project.org/package=predictsr)
 [![R-CMD-check](https://github.com/Biodiversity-Futures-Lab/predictsr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Biodiversity-Futures-Lab/predictsr/actions/workflows/R-CMD-check.yaml)
+[![format-check](https://github.com/Biodiversity-Futures-Lab/predictsr/actions/workflows/format-check.yaml/badge.svg)](https://github.com/Biodiversity-Futures-Lab/predictsr/actions/workflows/format-check.yaml)
 <!-- badges: end -->
 
 predictsr fetches the latest version of the open-access
