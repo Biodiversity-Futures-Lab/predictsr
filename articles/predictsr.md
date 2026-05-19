@@ -33,17 +33,19 @@ releases into a single dataframe (by default), or you can specify which
 years to save:
 
 ``` r
+
 file_predicts <- file.path(tempdir(), "predicts.rds")
 predicts <- predictsr::LoadPredictsData(file_predicts, extract = c(2016, 2022))
 ```
 
-    ## INFO [2025-12-01 09:42:15] Pulling in extracts for 2016
-    ## INFO [2025-12-01 09:42:15] Pulling in extracts for 2022
-    ## INFO [2025-12-01 09:42:15] No existing valid cache at /tmp/Rtmpn82um1/predicts.rds; will download
-    ## INFO [2025-12-01 09:42:15] Downloading fresh PREDICTS data (extract=2016,2022)
-    ## INFO [2025-12-01 09:43:06] Wrote data file 'predicts.rds' and aux metadata 'predicts.rds.aux.json'
+    ## INFO [2026-05-19 12:38:37] Pulling in extracts for 2016
+    ## INFO [2026-05-19 12:38:37] Pulling in extracts for 2022
+    ## INFO [2026-05-19 12:38:37] No existing valid cache at /tmp/RtmpC588fb/predicts.rds; will download
+    ## INFO [2026-05-19 12:38:37] Downloading fresh PREDICTS data (extract=2016,2022)
+    ## INFO [2026-05-19 12:39:31] Wrote data file 'predicts.rds' and aux metadata 'predicts.rds.aux.json'
 
 ``` r
+
 str(predicts)
 ```
 
@@ -130,6 +132,7 @@ PREDICTS extracts. Let’s look at a set of summary statistics for the
 database:
 
 ``` r
+
 if (nrow(predicts) > 0) {
   taxa <- predicts[
     !duplicated(predicts[, c("Source_ID", "Study_name", "Taxon_name_entered")]),
@@ -164,6 +167,7 @@ dataframe, with a couple of important columns that should be noted:
 Let’s also check the ranges of sample collection in the database:
 
 ``` r
+
 if (nrow(predicts) > 0) {
   print(glue::glue(
     "Earliest sample collection (midpoint): {min(predicts$Sample_midpoint)}, ",
@@ -182,6 +186,7 @@ If you don’t want to cache the data, you can also just use
 `GetPredictsData`:
 
 ``` r
+
 predicts <- predictsr::GetPredictsData(extract = c(2016, 2022))
 ```
 
@@ -199,6 +204,7 @@ release; to get *these data* you will need to use the
 pull in the summaries for the same data as above:
 
 ``` r
+
 summaries <- predictsr::GetSitelevelSummaries(extract = c(2016, 2022))
 str(summaries)
 ```
@@ -259,6 +265,7 @@ Investigating the summary data closer we see that there are a number of
 missing columns between the two dataframes:
 
 ``` r
+
 if (nrow(predicts) > 0 && nrow(summaries) > 0) {
   print(names(predicts)[!(names(predicts) %in% names(summaries))])
 }
@@ -284,6 +291,7 @@ the following (roughly):
 that don’t match up.
 
 ``` r
+
 if (nrow(summaries) > 0) {
   summaries_rep <- predicts |>
     dplyr::mutate(
@@ -329,6 +337,7 @@ description of the data that is used in each of these columns. You can
 access this via the `GetColumnDescriptions` function:
 
 ``` r
+
 descriptions <- predictsr::GetColumnDescriptions()
 str(descriptions)
 ```
