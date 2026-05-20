@@ -160,8 +160,19 @@
   data_zip_url <- status_json$urls$direct
 
   logger::log_debug("Download data into a tempfile")
-  temp_zip <- tempfile()
-  download.file(data_zip_url, temp_zip, quiet = TRUE)
+  temp_zip <- tempfile(fileext = ".zip")
+  download_status <- tryCatch(
+    download.file(data_zip_url, temp_zip, quiet = TRUE),
+    error = function(e) {
+      logger::log_error("Data download failed: returning empty dataframe")
+      unlink(temp_zip)
+      return(1)
+    }
+  )
+
+  if (download_status != 0) {
+    return(data.frame())
+  }
 
   logger::log_debug("Write to a tempfile then read into an RDS")
   outputs <- unzip(temp_zip, exdir = tempdir())

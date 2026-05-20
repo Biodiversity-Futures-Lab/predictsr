@@ -111,3 +111,25 @@ test_that("We return an empty dataframe if nothing is found", {
   expect_equal(nrow(result), 0)
   expect_equal(ncol(result), 0)
 })
+
+test_that("We return an empty dataframe if the download fails", {
+  with_mocked_bindings(
+    result <- GetColumnDescriptions(),
+    # mock the API calls to return an empty dataframe
+    .RequestDataPortal = function(...) {
+      return(
+        list(status = "complete", result = NULL, message = "no data available")
+      )
+    },
+    .CheckDownloadResponse = function(...) {
+      return(list(status = "complete", message = "no data available"))
+    },
+    download.file = function(...) {
+      stop("Download failed")
+    }
+  )
+
+  expect_true(inherits(result, "data.frame"))
+  expect_equal(nrow(result), 0)
+  expect_equal(ncol(result), 0)
+})

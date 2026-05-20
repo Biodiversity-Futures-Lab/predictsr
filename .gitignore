@@ -1,6 +1,8 @@
+.DS_Store
 .Rproj.user
 inst/doc
 **/.quarto/
 /doc/
 /Meta/
 docs
+revdep
