@@ -16,9 +16,12 @@ Useful links:
 
 - <https://github.com/Biodiversity-Futures-Lab/predictsr>
 
+- Report bugs at
+  <https://github.com/Biodiversity-Futures-Lab/predictsr/issues>
+
 ## Author
 
-**Maintainer**: Connor Duffin <connor.p.duffin@gmail.com>
+**Maintainer**: Connor Duffin <c.duffin@protonmail.com>
 
 Other contributors:
 
