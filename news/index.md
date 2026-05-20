@@ -1,6 +1,6 @@
 # Changelog
 
-## predictsr (development version)
+## predictsr 0.2.1
 
 - Fixed API error causing failures via the NHM data portal (on the data
   portal side).
