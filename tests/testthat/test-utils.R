@@ -55,7 +55,6 @@ test_that("Download request fails appropriately", {
   expect_equal(result$message, "status failed")
 })
 
-
 test_that(".RequestRDSDataFrame returns an empty dataframe if incomplete", {
   # will fail before any API calls
   status_json <- "https://data.nhm.ac.uk"
@@ -71,4 +70,22 @@ test_that(".RequestRDSDataFrame returns an empty dataframe if incomplete", {
   expect_true(inherits(df, "data.frame"))
   expect_equal(nrow(df), 0)
   expect_equal(ncol(df), 0)
+})
+
+test_that(".RequestRDSDataFrame returns an empty dataframe if download fails", {
+  with_mocked_bindings(
+    result <- .RequestRDSDataFrame(
+      list(
+        status = "complete",
+        urls = list(direct = "https://data.nhm.ac.uk/download")
+      )
+    ),
+    download.file = function(...) {
+      stop("Download failed")
+    }
+  )
+
+  expect_true(inherits(result, "data.frame"))
+  expect_equal(nrow(result), 0)
+  expect_equal(ncol(result), 0)
 })

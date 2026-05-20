@@ -192,11 +192,7 @@ LoadPredictsData <- function(
     return(list(valid = FALSE, data = NULL, aux = NULL))
   }
 
-  if (
-    !all(
-      (sort(unlist(aux$years)) - sort(requested_years)) <= 1e-8
-    )
-  ) {
+  if (!setequal(unlist(aux$years), requested_years)) {
     logger::log_warn(
       "Metadata years ({paste(aux$years, collapse=',')}) differ from requested years ({paste(requested_years, collapse=',')})."
     )
@@ -223,7 +219,12 @@ LoadPredictsData <- function(
     digest::digest(df, algo = "sha256"),
     error = function(e) NA_character_
   )
-  if (is.na(df_hash) || is.null(aux$sha256) || df_hash != aux$sha256) {
+  if (
+    is.na(df_hash) ||
+      is.na(aux$sha256) ||
+      is.null(aux$sha256) ||
+      df_hash != aux$sha256
+  ) {
     logger::log_warn(
       "Hash mismatch for cached file; expected {aux$sha256}, got {df_hash}"
     )

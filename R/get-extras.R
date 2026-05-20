@@ -127,8 +127,19 @@ GetColumnDescriptions <- function(...) {
   logger::log_debug("Pluck the download URL, and download to ZIP")
   data_zip_url <- status_json$urls$direct
 
-  temp_zip <- tempfile()
-  download.file(data_zip_url, temp_zip)
+  temp_zip <- tempfile(fileext = ".zip")
+  download_status <- tryCatch(
+    download.file(data_zip_url, temp_zip, quiet = TRUE),
+    error = function(e) {
+      logger::log_error("Data download failed: returning empty dataframe")
+      unlink(temp_zip)
+      return(1)
+    }
+  )
+
+  if (download_status != 0) {
+    return(data.frame())
+  }
 
   logger::log_debug(
     "Unzip the download and get the column description csv"
