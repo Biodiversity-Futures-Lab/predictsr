@@ -18,7 +18,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Connor Duffin \email{connor.p.duffin@gmail.com}
+\strong{Maintainer}: Connor Duffin \email{c.duffin@protonmail.com}
 
 Other contributors:
 \itemize{
