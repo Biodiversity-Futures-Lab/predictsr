@@ -2,6 +2,14 @@
 
 ## predictsr (development version)
 
+- Fixed error causing failures via the NHM data portal.
+- Fixed temp files not being cleaned up on failed downloads
+  ([\#38](https://github.com/Biodiversity-Futures-Lab/predictsr/issues/38)).
+- Fixed incorrect comparison of integer years
+  ([\#39](https://github.com/Biodiversity-Futures-Lab/predictsr/issues/39)).
+- Fixed SHA validation failing for NAs
+  ([\#40](https://github.com/Biodiversity-Futures-Lab/predictsr/issues/40)).
+
 ## predictsr 0.2.0
 
 CRAN release: 2025-11-28
