@@ -192,11 +192,7 @@ LoadPredictsData <- function(
     return(list(valid = FALSE, data = NULL, aux = NULL))
   }
 
-  if (
-    !all(
-      (sort(unlist(aux$years)) - sort(requested_years)) <= 1e-8
-    )
-  ) {
+  if (!setequal(unlist(aux$years), requested_years)) {
     logger::log_warn(
       "Metadata years ({paste(aux$years, collapse=',')}) differ from requested years ({paste(requested_years, collapse=',')})."
     )
