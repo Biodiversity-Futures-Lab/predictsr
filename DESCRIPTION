@@ -31,3 +31,4 @@ Depends:
 Config/testthat/parallel: true
 VignetteBuilder: knitr
 URL: https://biodiversity-futures-lab.github.io/predictsr/, https://github.com/Biodiversity-Futures-Lab/predictsr
+BugReports: https://github.com/Biodiversity-Futures-Lab/predictsr/issues
