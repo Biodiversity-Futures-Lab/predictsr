@@ -219,7 +219,12 @@ LoadPredictsData <- function(
     digest::digest(df, algo = "sha256"),
     error = function(e) NA_character_
   )
-  if (is.na(df_hash) || is.null(aux$sha256) || df_hash != aux$sha256) {
+  if (
+    is.na(df_hash) ||
+      is.na(aux$sha256) ||
+      is.null(aux$sha256) ||
+      df_hash != aux$sha256
+  ) {
     logger::log_warn(
       "Hash mismatch for cached file; expected {aux$sha256}, got {df_hash}"
     )
