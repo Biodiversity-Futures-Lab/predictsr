@@ -1,6 +1,7 @@
 # predictsr (development version)
 
 * Fixed API error causing failures via the NHM data portal (on the data portal side).
+* air format package and include Github actions check.
 * Fixed temp files not being cleaned up on failed downloads (#38).
 * Fixed incorrect comparison of integer years (#39).
 * Fixed SHA validation failing for NAs (#40).

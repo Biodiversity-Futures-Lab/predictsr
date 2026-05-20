@@ -13,6 +13,7 @@ Useful links:
 \itemize{
   \item \url{https://biodiversity-futures-lab.github.io/predictsr/}
   \item \url{https://github.com/Biodiversity-Futures-Lab/predictsr}
+  \item Report bugs at \url{https://github.com/Biodiversity-Futures-Lab/predictsr/issues}
 }
 
 }
