@@ -2,6 +2,8 @@
 
 ## predictsr 0.2.1
 
+CRAN release: 2026-05-20
+
 - Fixed API error causing failures via the NHM data portal (on the data
   portal side).
 - air format package and include Github actions check.
